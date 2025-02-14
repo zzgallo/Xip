@@ -27,16 +27,13 @@ function App() {
       <div className="content-container">
         {/* Sidebar */}
         <aside className="sidebar">
-        <img src="/xiplogo.png" alt="Xip Logo" className="sidebar-logo" />
+        <img src="/logoseal.png" alt="logo" className="sidebar-logo" />
 
           <ul>
             <li onClick={() => setActiveSection("dashboard")}>Dashboard</li>
             <li onClick={() => setActiveSection("system")}>System</li>
             <li onClick={() => setActiveSection("network")}>Network</li>
             <li onClick={() => setActiveSection("active_directory")}>Active Directory</li>
-            <li onClick={() => setActiveSection("disk_drives")}>Disk Drives</li>
-            <li onClick={() => setActiveSection("p1")}>P1</li>
-            <li onClick={() => setActiveSection("p2")}>p2</li>
           </ul>
         </aside>
 
@@ -49,7 +46,6 @@ function App() {
                 <div className="stat-card">System Uptime: 5h 12m</div>
                 <div className="stat-card">CPU Usage: 23%</div>
                 <div className="stat-card">Memory Usage: 68%</div>
-                <div className="stat-card">Ping: -- ms</div>
                 <div className="stat-card">OS Version: --</div>
                 <div className="stat-card">Current User: --</div>
               </div>
@@ -58,13 +54,25 @@ function App() {
 
           {activeSection === "system" && (
             <div className="xip-section">
-              <h1>System</h1>
+              <h1>Hardware</h1>
               <div className="xip-action-grid">
-                <button className="xip-action-button">View Processes</button>
+                <button className="xip-action-button">Hardware Info</button>
+                <button className="xip-action-button">Printers</button>
+                <button className="xip-action-button">USB Devices</button>
                 <button className="xip-action-button">Restart System</button>
                 <button className="xip-action-button">Shutdown System</button>
-                <button className="xip-action-button">View Installed Apps</button>
               </div>
+              <h1>System Manangement</h1>
+              <div className="xip-action-grid">
+                <button className="xip-action-button">Local Users</button>
+                <button className="xip-action-button">Local Groups</button>
+                <button className="xip-action-button">Shares</button>
+                <button className="xip-action-button">C$</button>
+                <button className="xip-action-button">Event Viewer</button>
+                <button className="xip-action-button">Services</button>
+                <button className="xip-action-button">Computer Mgmt</button>
+              </div>
+
             </div>
           )}
 
@@ -76,6 +84,7 @@ function App() {
                 <button className="xip-action-button">Check IP Config</button>
                 <button className="xip-action-button">Trace Route</button>
                 <button className="xip-action-button">Check Open Ports</button>
+                <button className="xip-action-button">SMPT Telnet Test</button>
               </div>
             </div>
           )}
@@ -88,6 +97,7 @@ function App() {
                 <button className="xip-action-button">List Groups</button>
                 <button className="xip-action-button">Reset Password</button>
                 <button className="xip-action-button">Create User</button>
+                <button className="xip-action-button">Sync Status</button>
               </div>
             </div>
           )}
