@@ -1,4 +1,6 @@
-/* General Styling */
+/* ======================================
+   GENERAL STYLING & LAYOUT
+====================================== */
 body {
   font-family: "Poppins", monospace;
   background: linear-gradient(135deg, #9c3b23, #5c1f4d);
@@ -12,7 +14,6 @@ body {
   width: 100vw;
 }
 
-/* App Container */
 .app-container {
   display: flex;
   flex-direction: column;
@@ -20,7 +21,9 @@ body {
   height: 100vh;
 }
 
-/* Navbar */
+/* ======================================
+   NAVBAR
+====================================== */
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -40,7 +43,6 @@ body {
   animation: slideIn 0.6s ease-out forwards;
 }
 
-/* Navbar Left */
 .navbar-left {
   display: flex;
   gap: 20px;
@@ -120,7 +122,9 @@ body {
   cursor: pointer;
 }
 
-/* Sidebar */
+/* ======================================
+   SIDEBAR
+====================================== */
 .sidebar {
   width: 250px;
   background: linear-gradient(
@@ -158,13 +162,14 @@ body {
   margin: 0 auto 10px auto;
 }
 
+/* Sidebar List & Items */
 .sidebar ul {
   list-style: none;
   padding: 0;
   font-size: 18px;
   display: flex;
   flex-direction: column;
-  gap: 16px;  /* Increase this value to add more space between items */
+  gap: 16px; /* Vertical spacing between items */
 }
 
 .sidebar ul li {
@@ -174,7 +179,7 @@ body {
   padding: 12px;
   cursor: pointer;
   border-radius: 10px;
-  transform: translateX(0); /* Ensure initial state is set */
+  transform: translateX(0);
   transition: transform 0.3s ease, background 0.3s ease;
 }
 
@@ -183,7 +188,6 @@ body {
   transform: translateX(15px);
 }
 
-/* --- Active Sidebar Items with Glassmorphism Effect --- */
 .sidebar ul li.active-item {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
   backdrop-filter: blur(5px);
@@ -191,7 +195,7 @@ body {
   color: white;
   padding: 12px;
   border-radius: 10px;
-  transform: translateX(0); /* Make sure active item starts at 0 */
+  transform: translateX(0);
   transition: transform 0.3s ease, background 0.3s ease;
 }
 
@@ -215,21 +219,21 @@ body {
   text-align: center;
 }
 
-/* When the sidebar is collapsed */
+/* When Sidebar is Collapsed */
 .sidebar.collapsed ul li {
-  justify-content: center;  /* Centers content horizontally */
-  gap: 0;                   /* Removes extra gap since text is hidden */
-  padding: 12px;            /* You can adjust this if needed */
+  justify-content: center;
+  gap: 0;
+  padding: 12px;
 }
 
-/* Scale down the sidebar logo in collapsed state */
 .sidebar.collapsed .sidebar-logo {
-  width: 40px;   /* Reduced width for a compact view */
+  width: 40px;
   margin: 0 auto 10px auto;
 }
 
-
-/* Content Container */
+/* ======================================
+   CONTENT CONTAINER & MAIN CONTENT
+====================================== */
 .content-container {
   display: flex;
   flex-grow: 1;
@@ -237,7 +241,6 @@ body {
   padding: 20px;
 }
 
-/* Main Content */
 .main-content {
   flex-grow: 1;
   background: linear-gradient(
@@ -256,13 +259,12 @@ body {
   position: relative;
 }
 
-/* Dashboard Title */
+/* Dashboard Title & Stats Cards */
 .dashboard-title {
   font-size: 32px;
   font-weight: bold;
 }
 
-/* Stats Cards */
 .stats-container {
   display: flex;
   gap: 15px;
@@ -278,7 +280,9 @@ body {
   text-align: center;
 }
 
-/* Action Grid for Xip Buttons */
+/* ======================================
+   XIP ACTION GRID & BUTTONS
+====================================== */
 .xip-action-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -288,20 +292,6 @@ body {
   transform: translateX(-20px);
   animation: slideInFromPanel 0.3s ease-out forwards;
   animation-delay: 0.1s;
-}
-
-.xip-action-button {
-  background: rgba(255, 255, 255, 0.1);
-  border: none;
-  padding: 12px;
-  border-radius: 6px;
-  color: white;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.xip-action-button:hover {
-  background: rgba(255, 255, 255, 0.2);
 }
 
 @keyframes slideInFromPanel {
@@ -315,9 +305,28 @@ body {
   }
 }
 
+.xip-action-grid .xip-action-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 12px;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
 
+.xip-action-grid .xip-action-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+  transform: scale(1.05);
+}
 
-/* Terminal Panel Container */
+/* ======================================
+   TERMINAL PANEL
+====================================== */
 .terminal-panel-container {
   margin-top: 30px;
   border: 1px solid rgba(255, 255, 255, 0.15);
@@ -326,7 +335,6 @@ body {
   transition: max-height 0.3s ease;
 }
 
-/* Terminal Panel Header */
 .terminal-panel-header {
   display: flex;
   justify-content: space-between;
@@ -358,7 +366,6 @@ body {
   background: rgba(255, 255, 255, 0.2);
 }
 
-/* Terminal Panel Content */
 .terminal-panel {
   background: rgba(0, 0, 0, 0.8);
   padding: 15px;
@@ -367,14 +374,15 @@ body {
   transition: max-height 0.3s ease-out;
 }
 
-/* Terminal Output */
 .terminal-output {
   font-family: "Courier New", monospace;
   font-size: 14px;
   color: #ccc;
 }
 
-/* Slide-in Animation for Navbar, Sidebar, Main Content */
+/* ======================================
+   ANIMATIONS
+====================================== */
 @keyframes slideIn {
   from {
     transform: translateX(-100%);

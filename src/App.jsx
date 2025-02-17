@@ -1,4 +1,8 @@
 import { useState } from "react";
+import { useEffect } from "react";
+// Remove any import of invoke or tauriApi if present
+// import { invoke } from '@tauri-apps/api';  // Remove this!
+
 import { 
   FaSearch, FaCog, FaTerminal, 
   FaTachometerAlt, FaDesktop, FaNetworkWired, FaUserAlt 
@@ -9,7 +13,12 @@ function App() {
   const [activeSection, setActiveSection] = useState("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [terminalOpen, setTerminalOpen] = useState(true);
-
+  const [target, setTarget] = useState("");
+  const [terminalOutput, setTerminalOutput] = useState("Command executed...");
+  const handleSetTarget = () => {
+    console.log("handleSetTarget triggered (dummy function).");
+  };
+  
   return (
     <div className="app-container">
       {/* Navbar */}
@@ -21,8 +30,16 @@ function App() {
           </div>
 
           <div className="target-machine">
-            <input type="text" placeholder="Enter machine name or IP" className="machine-input" />
-            <button className="machine-submit">Submit</button>
+            <input
+              type="text"
+              placeholder="Enter machine name or IP"
+              className="machine-input"
+              value={target}
+              onChange={(e) => setTarget(e.target.value)}
+            />
+            <button className="machine-submit" onClick={handleSetTarget}>
+              Submit
+            </button>
           </div>
         </div>
 
@@ -113,7 +130,9 @@ function App() {
             <div className="xip-section" key={activeSection}>
               <h1>Network</h1>
               <div className="xip-action-grid">
-                <button className="xip-action-button">Ping Machine</button>
+                <button className="xip-action-button" >
+                  Ping Machine
+                </button>
                 <button className="xip-action-button">Check IP Config</button>
                 <button className="xip-action-button">Trace Route</button>
                 <button className="xip-action-button">Check Open Ports</button>
@@ -135,7 +154,6 @@ function App() {
             </div>
           )}
 
-          {/* Terminal Panel */}
           <div className="terminal-panel-container" key="terminal">
             <div
               className="terminal-panel-header"
@@ -154,7 +172,7 @@ function App() {
               style={{ maxHeight: terminalOpen ? "200px" : "0px" }}
             >
               <div className="terminal-output">
-                <p>Command executed...</p>
+                <p>{terminalOutput}</p>
               </div>
             </div>
           </div>
