@@ -1,9 +1,16 @@
+@font-face {
+  font-family: "CinzelDecorative-Regular";
+  src: url("/fonts/CinzelDecorative-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
 /* ======================================
    GENERAL STYLING & LAYOUT
 ====================================== */
 body {
   font-family: "Poppins", monospace;
-  background: linear-gradient(135deg, #9c3b23, #5c1f4d);
+  background: linear-gradient(135deg, #9c3b23, #000000, #9c3b23);
   color: white;
   margin: 0;
   padding: 0;
@@ -262,8 +269,9 @@ body {
 
 /* Dashboard Title & Stats Cards */
 .dashboard-title {
-  font-size: 32px;
+  font-size: 48px;
   font-weight: bold;
+  font-family: "CinzelDecorative-Regular", sans-serif;
 }
 
 .stats-container {

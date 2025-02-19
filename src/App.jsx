@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 
 import { 
@@ -13,30 +13,22 @@ function App() {
   const [terminalOpen, setTerminalOpen] = useState(true);
   const [target, setTarget] = useState("");
   const [terminalOutput, setTerminalOutput] = useState("Command executed...");
-  const [currentUser, setCurrentUser] = useState("--");
 
-  // When user clicks "Submit", set the target and update the current user on the dashboard.
+  // Only backend callback: set_target.
   const handleSetTarget = async () => {
     try {
-      // Set the target machine in the backend.
       await invoke("set_target", { target });
       console.log("Target set successfully:", target);
       setTerminalOutput(`Target set: ${target}`);
-      
-      // Now, update the "Current User" stat.
-      // This assumes you have a backend command "get_current_user" registered.
-      const user = await invoke("get_current_user");
-      console.log("Current user:", user);
-      setCurrentUser(user);
     } catch (error) {
       console.error("Failed to set target:", error);
       setTerminalOutput(`Failed to set target: ${error}`);
     }
   };
 
-  // Ping command (remains on the Network section)
   const handlePing = async () => {
     try {
+      setTerminalOutput("Pinging...");
       const result = await invoke("ping");
       console.log("Ping result:", result);
       setTerminalOutput(result);
@@ -45,6 +37,7 @@ function App() {
       setTerminalOutput(`Ping error: ${error}`);
     }
   };
+  
 
   return (
     <div className="app-container">
@@ -53,13 +46,8 @@ function App() {
         <div className="navbar-left">
           <div className="search-bar">
             <FaSearch className="icon" />
-            <input 
-              type="text" 
-              className="search-input" 
-              placeholder="Search..." 
-            />
+            <input type="text" className="search-input" placeholder="Search..." />
           </div>
-
           <div className="target-machine">
             <input
               type="text"
@@ -68,15 +56,11 @@ function App() {
               value={target}
               onChange={(e) => setTarget(e.target.value)}
             />
-            <button 
-              className="machine-submit" 
-              onClick={handleSetTarget}
-            >
+            <button className="machine-submit" onClick={handleSetTarget}>
               Submit
             </button>
           </div>
         </div>
-
         <div className="navbar-right">
           <FaCog className="icon settings-icon" />
           <img src="/profile.png" alt="Profile" className="profile-pic" />
@@ -117,10 +101,7 @@ function App() {
               {sidebarOpen && "Active Directory"}
             </li>
           </ul>
-          <button 
-            className="sidebar-toggle" 
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-          >
+          <button className="sidebar-toggle" onClick={() => setSidebarOpen(!sidebarOpen)}>
             {sidebarOpen ? "<<" : ">>"}
           </button>
         </aside>
@@ -135,7 +116,7 @@ function App() {
                 <div className="stat-card">CPU Usage: 23%</div>
                 <div className="stat-card">Memory Usage: 68%</div>
                 <div className="stat-card">OS Version: --</div>
-                <div className="stat-card">Current User: {currentUser}</div>
+                <div className="stat-card">Current User: --</div>
               </div>
             </div>
           )}
@@ -167,10 +148,7 @@ function App() {
             <div className="xip-section" key={activeSection}>
               <h1>Network</h1>
               <div className="xip-action-grid">
-                <button 
-                  className="xip-action-button" 
-                  onClick={handlePing}
-                >
+                <button className="xip-action-button" onClick={handlePing}>
                   Ping Machine
                 </button>
                 <button className="xip-action-button">Check IP Config</button>
@@ -194,7 +172,6 @@ function App() {
             </div>
           )}
 
-          {/* Terminal Panel */}
           <div className="terminal-panel-container" key="terminal">
             <div
               className="terminal-panel-header"
