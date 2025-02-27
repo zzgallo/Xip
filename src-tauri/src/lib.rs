@@ -40,25 +40,36 @@ fn set_target(target: &str, state: State<AppState>) -> Result<(), String> {
     if target.trim().is_empty() {
         return Err("Target cannot be empty".into());
     }
+    
     let fqdn = match target.parse::<IpAddr>() {
         Ok(ip) => {
-            // Create a DNS resolver using the system's configuration.
-            let resolver = Resolver::from_system_conf().map_err(|e| format!("Resolver error: {}", e))?;
-            // Perform reverse DNS lookup.
-            let response = resolver.reverse_lookup(ip).map_err(|e| format!("Reverse lookup error: {}", e))?;
-            if let Some(name) = response.iter().next() {
-                name.to_utf8()
-            } else {
-                return Err("Reverse lookup returned no results".into());
+            let resolver = Resolver::from_system_conf()
+                .map_err(|e| format!("Resolver error: {}", e))?;
+            match resolver.reverse_lookup(ip) {
+                Ok(response) => {
+                    if let Some(name) = response.iter().next() {
+                        // Convert to UTF-8 and remove any trailing dot.
+                        let hostname = name.to_utf8();
+                        hostname.trim_end_matches('.').to_string()
+                    } else {
+                        return Err("Reverse lookup returned no results".into());
+                    }
+                },
+                Err(e) => {
+                    println!("Reverse lookup failed: {}", e);
+                    target.to_string() // fallback to input if lookup fails
+                }
             }
         },
-        Err(_) => target.to_string(),
+        Err(_) => target.to_string(), // not an IP, assume it's already a hostname/FQDN.
     };
+    
     let mut t = state.target_machine.lock().map_err(|e| e.to_string())?;
     *t = fqdn.clone();
     println!("Target set to: {}", fqdn);
     Ok(())
 }
+
 
 /// Pings the target machine locally by running the ping command on this machine.
 /// Uses the stored target machine (FQDN or hostname) as the parameter.
