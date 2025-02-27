@@ -37,8 +37,16 @@ function App() {
       setTerminalOutput(`Ping error: ${error}`);
     }
   };
-  
 
+  const handleTestCurrentUser = async () => {
+    try {
+      const user = await invoke("get_current_user");
+      setTerminalOutput(`Current user: ${user}`);
+    } catch (error) {
+      setTerminalOutput(`Error: ${error}`);
+    }
+  };
+  
   return (
     <div className="app-container">
       {/* Navbar */}
@@ -155,6 +163,8 @@ function App() {
                 <button className="xip-action-button">Trace Route</button>
                 <button className="xip-action-button">Check Open Ports</button>
                 <button className="xip-action-button">SMPT Telnet Test</button>
+                <button onClick={handleTestCurrentUser}>Test Get Current User</button>
+
               </div>
             </div>
           )}

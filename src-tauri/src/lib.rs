@@ -4,9 +4,33 @@ use std::net::IpAddr;
 use tauri::State;
 use trust_dns_resolver::Resolver; // For reverse DNS lookup
 
-// Global state to hold the target machine as a FQDN.
+// Global state to hold the target machine as a Fully Qualified Domain Name (FQDN).
 struct AppState {
     target_machine: Mutex<String>,
+}
+
+/// Executes a remote command via PowerShell remoting on the target machine.
+/// It constructs an Invoke-Command call and returns the output.
+#[tauri::command]
+fn remote_command(target: &str, command: &str) -> Result<String, String> {
+    let ps_command = format!(
+        "Invoke-Command -ComputerName {} -ScriptBlock {{{}}}",
+        target, command
+    );
+    println!("Executing remote command: {}", ps_command);
+    let output = Command::new("powershell")
+        .arg("-NoProfile")
+        .arg("-Command")
+        .arg(&ps_command)
+        .output()
+        .map_err(|e| format!("Failed to execute PowerShell: {}", e))?;
+    let stdout = String::from_utf8_lossy(&output.stdout).to_string();
+    let stderr = String::from_utf8_lossy(&output.stderr).to_string();
+    if !stdout.trim().is_empty() {
+        Ok(stdout)
+    } else {
+        Ok(stderr)
+    }
 }
 
 /// Sets the target machine, converting an IP address to its FQDN if needed.
@@ -16,10 +40,11 @@ fn set_target(target: &str, state: State<AppState>) -> Result<(), String> {
     if target.trim().is_empty() {
         return Err("Target cannot be empty".into());
     }
-
     let fqdn = match target.parse::<IpAddr>() {
         Ok(ip) => {
+            // Create a DNS resolver using the system's configuration.
             let resolver = Resolver::from_system_conf().map_err(|e| format!("Resolver error: {}", e))?;
+            // Perform reverse DNS lookup.
             let response = resolver.reverse_lookup(ip).map_err(|e| format!("Reverse lookup error: {}", e))?;
             if let Some(name) = response.iter().next() {
                 name.to_utf8()
@@ -29,7 +54,6 @@ fn set_target(target: &str, state: State<AppState>) -> Result<(), String> {
         },
         Err(_) => target.to_string(),
     };
-
     let mut t = state.target_machine.lock().map_err(|e| e.to_string())?;
     *t = fqdn.clone();
     println!("Target set to: {}", fqdn);
@@ -37,7 +61,7 @@ fn set_target(target: &str, state: State<AppState>) -> Result<(), String> {
 }
 
 /// Pings the target machine locally by running the ping command on this machine.
-/// It uses the stored target machine (FQDN or hostname) as the parameter.
+/// Uses the stored target machine (FQDN or hostname) as the parameter.
 #[tauri::command]
 fn ping(state: State<AppState>) -> Result<String, String> {
     let t = state.target_machine.lock().map_err(|e| e.to_string())?;
@@ -54,6 +78,17 @@ fn ping(state: State<AppState>) -> Result<String, String> {
     Ok(result)
 }
 
+/// Retrieves the current logged-on user from the target machine via remote PowerShell.
+/// It runs the "whoami" command on the remote machine.
+#[tauri::command]
+fn get_current_user(state: State<AppState>) -> Result<String, String> {
+    let t = state.target_machine.lock().map_err(|e| e.to_string())?;
+    if t.is_empty() {
+        return Err("No target machine set".into());
+    }
+    remote_command(&*t, "whoami")
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -62,7 +97,9 @@ pub fn run() {
         })
         .invoke_handler(tauri::generate_handler![
             set_target,
-            ping
+            ping,
+            get_current_user,
+            remote_command
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
