@@ -97,7 +97,7 @@ fn get_current_user(state: State<AppState>) -> Result<String, String> {
     if t.is_empty() {
         return Err("No target machine set".into());
     }
-    remote_command(&*t, "whoami")
+    remote_command(&*t, "(Get-WmiObject -Class Win32_ComputerSystem).UserName")
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
