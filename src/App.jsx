@@ -5,6 +5,11 @@ import {
   FaDesktop,
   FaNetworkWired,
   FaUserAlt,
+  FaTasks,
+  FaPowerOff,
+  FaUndo,
+  FaPodcast,
+  FaCogs,
 } from "react-icons/fa";
 import { Responsive, WidthProvider } from "react-grid-layout";
 import "react-grid-layout/css/styles.css";
@@ -12,37 +17,38 @@ import "react-resizable/css/styles.css";
 import "./App.css";
 import SidebarButton from "./SidebarButton";
 
+
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
 function App() {
   const [activeSection, setActiveSection] = useState("dashboard");
-  const [terminalOutput, setTerminalOutput] = useState("Command executed...");
+  const [terminalOutput, setTerminalOutput] = useState("Ready");
   const [target, setTarget] = useState("");
   
   // Default layouts for each section
   const [layouts, setLayouts] = useState({
     system: {
       lg: [
-        { i: "actions", x: 0, y: 0, w: 6, h: 13, minW: 3, minH: 4 },
-        { i: "terminal", x: 6, y: 0, w: 6, h: 13, minW: 3, minH: 4 },
-        { i: "info1", x: 0, y: 8, w: 6, h: 13, minW: 3, minH: 3 },
-        { i: "info2", x: 6, y: 8, w: 6, h: 13, minW: 3, minH: 3 }
+        { i: "actions", x: 0, y: 0, w: 3, h: 13, minW: 3, minH: 4 },
+        { i: "terminal", x: 6, y: 0, w: 9, h: 13, minW: 3, minH: 4 },
+        { i: "info1", x: 0, y: 8, w: 6, h: 8, minW: 3, minH: 3 },
+        { i: "info2", x: 6, y: 8, w: 6, h: 8, minW: 3, minH: 3 }
       ]
     },
     network: {
       lg: [
-        { i: "actions", x: 0, y: 0, w: 6, h: 13, minW: 3, minH: 4 },
-        { i: "terminal", x: 6, y: 0, w: 6, h: 13, minW: 3, minH: 4 },
-        { i: "info1", x: 0, y: 8, w: 6, h: 13, minW: 3, minH: 3 },
-        { i: "info2", x: 6, y: 8, w: 6, h: 13, minW: 3, minH: 3 }
+        { i: "actions", x: 0, y: 0, w: 3, h: 13, minW: 3, minH: 4 },
+        { i: "terminal", x: 6, y: 0, w: 9, h: 13, minW: 3, minH: 4 },
+        { i: "info1", x: 0, y: 8, w: 6, h: 8, minW: 3, minH: 3 },
+        { i: "info2", x: 6, y: 8, w: 6, h: 8, minW: 3, minH: 3 }
       ]
     },
     active_directory: {
       lg: [
-        { i: "actions", x: 0, y: 0, w: 6, h: 13, minW: 3, minH: 4 },
-        { i: "terminal", x: 6, y: 0, w: 6, h: 13, minW: 3, minH: 4 },
-        { i: "info1", x: 0, y: 8, w: 6, h: 13, minW: 3, minH: 3 },
-        { i: "info2", x: 6, y: 8, w: 6, h: 13, minW: 3, minH: 3 }
+        { i: "actions", x: 0, y: 0, w: 3, h: 13, minW: 3, minH: 4 },
+        { i: "terminal", x: 6, y: 0, w: 9, h: 13, minW: 3, minH: 4 },
+        { i: "info1", x: 0, y: 8, w: 6, h: 8, minW: 3, minH: 3 },
+        { i: "info2", x: 6, y: 8, w: 6, h: 8, minW: 3, minH: 3 }
       ]
     }
   });
@@ -230,7 +236,18 @@ function App() {
           </div>
         </div>
       );
-    }
+    } else if (activeSection === "install") {
+      return (
+        <div className="xip-section" key="dashboard">
+          <h1 className="install-title">Install</h1>
+        </div>
+      );
+    } else if (activeSection === "settings")
+      return (
+        <div className="xip-section" key="settings">
+          <h1 className="settings-title">Settings</h1>
+        </div>
+    )
 
     // Get the grid items for the current section
     const gridItems = {
@@ -315,6 +332,27 @@ function App() {
             icon={FaUserAlt}
             label="Active Directory"
           />
+          <SidebarButton
+            active={activeSection === "install"}
+            onClick={() => setActiveSection("install")}
+            icon={FaTasks}
+            label="Install"
+          />
+          <hr style={{
+            border: 'none',
+            height: '2px',
+            backgroundColor: '#CCC5B9',
+            margin: '15px'
+          }} />
+
+      <div className="bottom-buttons">
+      <SidebarButton
+            active={activeSection === "settings"}
+            onClick={() => setActiveSection("settings")}
+            icon={FaCogs}
+            label="Settings"
+  />
+      </div>
         </aside>
         <main className="main-content">
           <div className="target-machine-field" style={{ margin: "20px", padding: "10px" }}>
@@ -348,10 +386,25 @@ function App() {
 
   {/* Quick-action buttons overlaid on top of the SVG */}
   <div className="quick-actions">
-  <SidebarButton label="Action 1" onClick={() => {}} />
-  <SidebarButton label="Action 2" onClick={() => {}} />
-  <SidebarButton label="Action 3" onClick={() => {}} />
-  </div>
+  <SidebarButton
+            active={activeSection === "install"}
+            onClick={() => setActiveSection("install")}
+            icon={FaPodcast}
+            label="Ping"
+  />
+  <SidebarButton
+            active={activeSection === "install"}
+            onClick={() => setActiveSection("install")}
+            icon={FaUndo}
+            label="Restart"
+  />
+  <SidebarButton
+            active={activeSection === "install"}
+            onClick={() => setActiveSection("install")}
+            icon={FaPowerOff}
+            label="Shutdown"  
+  />          
+      </div>
 </div>
 
           {renderGridContent()}

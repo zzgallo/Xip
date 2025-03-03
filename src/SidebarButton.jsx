@@ -1,7 +1,7 @@
 import React from "react";
 import "./SidebarButton.css";
 
-const SidebarButton = ({ active, onClick, label, icon: Icon }) => {
+const SidebarButton = ({ active, onClick, label, icon: Icon, className = "" }) => {
   return (
     <button className="animated-button" onClick={onClick}>
       <svg viewBox="0 0 24 24" className="arr-2" xmlns="http://www.w3.org/2000/svg">

@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Chonburi&family=UnifrakturCook:wght@700&display=swap');
+
 /* App.css */
 html, body, #root {
   margin: 0;
@@ -22,8 +24,8 @@ html, body, #root {
   align-items: center;
   gap: 10px;
   padding: 10px 20px;
-  background-color: #FFFCF2;  /* light background for contrast */
-  border: 2px solid #EB5E28;  /* accent border matching your palette */
+  background-color: #252422;  /* light background for contrast */
+  border: 1px solid #EB5E28;  /* accent border matching your palette */
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   margin: 20px; /* adjust spacing as needed */
@@ -33,6 +35,7 @@ html, body, #root {
 .machine-input {
   flex: 1;
   padding: 8px 12px;
+  background-color: #FFFCF2;
   border: 1px solid #EB5E28;
   border-radius: 4px;
   font-size: 16px;
@@ -41,7 +44,7 @@ html, body, #root {
 }
 
 .machine-input:focus {
-  border-color: #403D39;
+  border-color: #39403a;
 }
 
 /* Style for the submit button */
@@ -74,7 +77,6 @@ html, body, #root {
 /* Sidebar styles */
 .sidebar {
   background-color: #252422;
-  color: rgb(255, 255, 255);
   width: 200px;
   border-radius: 18px;
   margin: 12px;
@@ -94,24 +96,14 @@ html, body, #root {
   
 }
 
-.sidebar ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.sidebar li {
-  padding: 15px 20px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
 .sidebar-icon {
   margin-right: 18px;
   font-size: 18px;
   min-width: 18px;
+}
+
+.bottom-buttons {
+  padding: 8px;
 }
 
 .special-header-container {
@@ -144,13 +136,13 @@ html, body, #root {
 /* For screens wider than 1600px (e.g. 1920x1080) */
 @media (min-width: 1600px) {
   .special-header-container {
-    width: 21.30%;
+    width: 41%;
     height: 240px; 
-    left: 78.7%;     
+    left: 59%;     
   }
   .quick-actions {
-    top: 36px;
-    right: 24px;
+    top: 40px;
+    right: 18px;
   }
 }
 
@@ -162,7 +154,7 @@ html, body, #root {
     left: 50%;     
   }
   .quick-actions {
-    top: 28px;
+    top: 40px;
     right: 16px;
   }
 }
@@ -208,8 +200,40 @@ html, body, #root {
 /* Dashboard styles */
 .dashboard-title {
   margin-bottom: 20px;
-  color: #EB5E28;
-}
+  color: #252422;
+    font-family: "Chonburi", serif;
+    font-weight: 400;
+    font-style: italic;
+    font-size: 64px;
+    text-align: left;
+  border-radius: 8px;
+  margin-right: 75.9%;
+  }
+
+  .install-title {
+    color: #252422;
+    font-family: "Chonburi", serif;
+    font-weight: 400;
+    font-style: italic;
+    font-size: 64px;
+    text-align: left;
+    margin-bottom: 20px;
+  }
+
+  .settings-title {
+    color: #252422;
+    font-family: "Chonburi", serif;
+    font-weight: 400;
+    font-style: italic;
+    font-size: 64px;
+    text-align: left;
+    margin-bottom: 20px;
+  }
+
+  .xip-section {
+    border-left: 3px #EB5E28 solid;
+    height: 8%;
+  }
 
 .stats-container {
   display: grid;
@@ -223,6 +247,7 @@ html, body, #root {
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   font-size: 16px;
+  text-align: center;
 }
 
 /* Grid layout styles */
@@ -281,8 +306,9 @@ html, body, #root {
 .xip-action-button {
   margin: 8px;
   padding: 12px;
-  background-color: #FFFCF2;
-  border: 1px solid #252422;
+  background-color: transparent;
+  color: #FFFCF2;
+  border: 1px solid #FFFCF2;
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
@@ -334,8 +360,9 @@ html, body, #root {
 .info-content p {
   margin: 8px 0;
   padding: 8px;
-  background-color: #FFFCF2;
+  background-color: transparent;
   border-radius: 4px;
+  color: #FFFCF2;
 }
 
 /* React grid layout custom styles */
