@@ -1,27 +1,63 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
-
-import { 
-  FaSearch, FaCog, FaTerminal, 
-  FaTachometerAlt, FaDesktop, FaNetworkWired, FaUserAlt 
+import {
+  FaTachometerAlt,
+  FaDesktop,
+  FaNetworkWired,
+  FaUserAlt,
+  FaTasks,
+  FaPowerOff,
+  FaUndo,
+  FaPodcast,
+  FaCogs,
 } from "react-icons/fa";
+import { Responsive, WidthProvider } from "react-grid-layout";
+import "react-grid-layout/css/styles.css";
+import "react-resizable/css/styles.css";
 import "./App.css";
+import SidebarButton from "./SidebarButton";
+
+
+const ResponsiveGridLayout = WidthProvider(Responsive);
 
 function App() {
   const [activeSection, setActiveSection] = useState("dashboard");
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [terminalOpen, setTerminalOpen] = useState(true);
+  const [terminalOutput, setTerminalOutput] = useState("Ready");
   const [target, setTarget] = useState("");
-  const [terminalOutput, setTerminalOutput] = useState("Command executed...");
+  
+  // Default layouts for each section
+  const [layouts, setLayouts] = useState({
+    system: {
+      lg: [
+        { i: "actions", x: 0, y: 0, w: 3, h: 13, minW: 3, minH: 4 },
+        { i: "terminal", x: 6, y: 0, w: 9, h: 13, minW: 3, minH: 4 },
+        { i: "info1", x: 0, y: 8, w: 6, h: 8, minW: 3, minH: 3 },
+        { i: "info2", x: 6, y: 8, w: 6, h: 8, minW: 3, minH: 3 }
+      ]
+    },
+    network: {
+      lg: [
+        { i: "actions", x: 0, y: 0, w: 3, h: 13, minW: 3, minH: 4 },
+        { i: "terminal", x: 6, y: 0, w: 9, h: 13, minW: 3, minH: 4 },
+        { i: "info1", x: 0, y: 8, w: 6, h: 8, minW: 3, minH: 3 },
+        { i: "info2", x: 6, y: 8, w: 6, h: 8, minW: 3, minH: 3 }
+      ]
+    },
+    active_directory: {
+      lg: [
+        { i: "actions", x: 0, y: 0, w: 3, h: 13, minW: 3, minH: 4 },
+        { i: "terminal", x: 6, y: 0, w: 9, h: 13, minW: 3, minH: 4 },
+        { i: "info1", x: 0, y: 8, w: 6, h: 8, minW: 3, minH: 3 },
+        { i: "info2", x: 6, y: 8, w: 6, h: 8, minW: 3, minH: 3 }
+      ]
+    }
+  });
 
-  // Only backend callback: set_target.
   const handleSetTarget = async () => {
     try {
       await invoke("set_target", { target });
-      console.log("Target set successfully:", target);
       setTerminalOutput(`Target set: ${target}`);
     } catch (error) {
-      console.error("Failed to set target:", error);
       setTerminalOutput(`Failed to set target: ${error}`);
     }
   };
@@ -30,10 +66,8 @@ function App() {
     try {
       setTerminalOutput("Pinging...");
       const result = await invoke("ping");
-      console.log("Ping result:", result);
       setTerminalOutput(result);
     } catch (error) {
-      console.error("Ping error:", error);
       setTerminalOutput(`Ping error: ${error}`);
     }
   };
@@ -46,17 +80,282 @@ function App() {
       setTerminalOutput(`Error: ${error}`);
     }
   };
-  
+
+  // Handle layout changes
+  const onLayoutChange = (layout, layouts) => {
+    // Save the new layout for the current section
+    setLayouts(prevLayouts => ({
+      ...prevLayouts,
+      [activeSection]: layouts
+    }));
+  };
+
+  // Content for interactive grid sections:
+  const systemActionButtons = (
+    <div className="xip-action-grid">
+      <h3 className="panel-title">System Actions</h3>
+      <button className="xip-action-button">Local Users</button>
+      <button className="xip-action-button">Local Groups</button>
+      <button className="xip-action-button">Shares</button>
+      <button className="xip-action-button">C$</button>
+      <button className="xip-action-button">Event Viewer</button>
+      <button className="xip-action-button">Services</button>
+      <button className="xip-action-button">Computer Mgmt</button>
+    </div>
+  );
+
+  const networkActionButtons = (
+    <div className="xip-action-grid">
+      <h3 className="panel-title">Network Actions</h3>
+      <button className="xip-action-button" onClick={handlePing}>
+        Ping Machine
+      </button>
+      <button className="xip-action-button">Check IP Config</button>
+      <button className="xip-action-button">Trace Route</button>
+      <button className="xip-action-button">Open Ports</button>
+      <button className="xip-action-button" onClick={handleTestCurrentUser}>
+        Test Current User
+      </button>
+    </div>
+  );
+
+  const adActionButtons = (
+    <div className="xip-action-grid">
+      <h3 className="panel-title">Active Directory Actions</h3>
+      <button className="xip-action-button">List Users</button>
+      <button className="xip-action-button">List Groups</button>
+      <button className="xip-action-button">Reset Password</button>
+      <button className="xip-action-button">Create User</button>
+      <button className="xip-action-button">Sync Status</button>
+    </div>
+  );
+
+  // Terminal panel (common for all interactive sections)
+  const terminalPanel = (
+    <div className="terminal-panel">
+      <h3 className="panel-title">Terminal Output</h3>
+      <div className="terminal-output">
+        <pre>{terminalOutput}</pre>
+      </div>
+    </div>
+  );
+
+  // Extra information panels
+  const renderInfoPanel1 = () => {
+    if (activeSection === "system") {
+      return (
+        <div className="info-panel">
+          <h3 className="panel-title">System Information</h3>
+          <div className="info-content">
+            <p>OS: Windows Server 2019</p>
+            <p>CPU: Intel Xeon E5-2680 v4</p>
+            <p>Memory: 32GB DDR4</p>
+            <p>Disk: 500GB SSD</p>
+          </div>
+        </div>
+      );
+    } else if (activeSection === "network") {
+      return (
+        <div className="info-panel">
+          <h3 className="panel-title">Network Status</h3>
+          <div className="info-content">
+            <p>IP Address: 192.168.1.100</p>
+            <p>Subnet Mask: 255.255.255.0</p>
+            <p>Gateway: 192.168.1.1</p>
+            <p>DNS: 8.8.8.8, 8.8.4.4</p>
+          </div>
+        </div>
+      );
+    } else if (activeSection === "active_directory") {
+      return (
+        <div className="info-panel">
+          <h3 className="panel-title">AD Domain Information</h3>
+          <div className="info-content">
+            <p>Domain: example.local</p>
+            <p>Forest Functional Level: 2016</p>
+            <p>Domain Controllers: 2</p>
+            <p>Total Users: 256</p>
+          </div>
+        </div>
+      );
+    }
+  };
+
+  const renderInfoPanel2 = () => {
+    if (activeSection === "system") {
+      return (
+        <div className="info-panel">
+          <h3 className="panel-title">System Performance</h3>
+          <div className="info-content">
+            <p>CPU Usage: 23%</p>
+            <p>Memory Usage: 68%</p>
+            <p>Disk I/O: 12MB/s</p>
+            <p>Uptime: 5d 12h 34m</p>
+          </div>
+        </div>
+      );
+    } else if (activeSection === "network") {
+      return (
+        <div className="info-panel">
+          <h3 className="panel-title">Network Traffic</h3>
+          <div className="info-content">
+            <p>Upload: 1.2 MB/s</p>
+            <p>Download: 5.7 MB/s</p>
+            <p>Active Connections: 32</p>
+            <p>Packets Lost: 0.1%</p>
+          </div>
+        </div>
+      );
+    } else if (activeSection === "active_directory") {
+      return (
+        <div className="info-panel">
+          <h3 className="panel-title">Recent AD Events</h3>
+          <div className="info-content">
+            <p>Last Password Change: 2h ago</p>
+            <p>Group Policy Update: 4h ago</p>
+            <p>New User Accounts: 3 today</p>
+            <p>Account Lockouts: 1 today</p>
+          </div>
+        </div>
+      );
+    }
+  };
+
+  // Render grid layout for the current section
+  const renderGridContent = () => {
+    if (activeSection === "dashboard") {
+      return (
+        <div className="xip-section" key="dashboard">
+          <h1 className="dashboard-title">Dashboard</h1>
+          <div className="stats-container">
+            <div className="stat-card">System Uptime: 5h 12m</div>
+            <div className="stat-card">CPU Usage: 23%</div>
+            <div className="stat-card">Memory Usage: 68%</div>
+            <div className="stat-card">OS Version: --</div>
+            <div className="stat-card">Current User: --</div>
+          </div>
+        </div>
+      );
+    } else if (activeSection === "install") {
+      return (
+        <div className="xip-section" key="dashboard">
+          <h1 className="install-title">Install</h1>
+        </div>
+      );
+    } else if (activeSection === "settings")
+      return (
+        <div className="xip-section" key="settings">
+          <h1 className="settings-title">Settings</h1>
+        </div>
+    )
+
+    // Get the grid items for the current section
+    const gridItems = {
+      system: {
+        actions: systemActionButtons,
+        terminal: terminalPanel,
+        info1: renderInfoPanel1(),
+        info2: renderInfoPanel2(),
+      },
+      network: {
+        actions: networkActionButtons,
+        terminal: terminalPanel,
+        info1: renderInfoPanel1(),
+        info2: renderInfoPanel2(),
+      },
+      active_directory: {
+        actions: adActionButtons,
+        terminal: terminalPanel,
+        info1: renderInfoPanel1(),
+        info2: renderInfoPanel2(),
+      },
+    };
+
+    return (
+      <div className="grid-container">
+        <ResponsiveGridLayout
+          className="layout"
+          layouts={layouts[activeSection]}
+          breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+          cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
+          rowHeight={30}
+          onLayoutChange={onLayoutChange}
+          isDraggable={true}
+          isResizable={true}
+          margin={[10, 10]}
+          containerPadding={[15, 15]}
+          draggableHandle=".panel-title"
+        >
+          <div key="actions" className="grid-item">
+            {gridItems[activeSection].actions}
+          </div>
+          <div key="terminal" className="grid-item">
+            {gridItems[activeSection].terminal}
+          </div>
+          <div key="info1" className="grid-item">
+            {gridItems[activeSection].info1}
+          </div>
+          <div key="info2" className="grid-item">
+            {gridItems[activeSection].info2}
+          </div>
+        </ResponsiveGridLayout>
+      </div>
+    );
+  };
+
   return (
     <div className="app-container">
-      {/* Navbar */}
-      <nav className="navbar">
-        <div className="navbar-left">
-          <div className="search-bar">
-            <FaSearch className="icon" />
-            <input type="text" className="search-input" placeholder="Search..." />
-          </div>
-          <div className="target-machine">
+      <div className="content-container">
+        <aside className="sidebar">
+          <img src="/logoseal.png" alt="logo" className="sidebar-logo" />
+          <SidebarButton
+            active={activeSection === "dashboard"}
+            onClick={() => setActiveSection("dashboard")}
+            icon={FaTachometerAlt}
+            label="Dashboard"
+          />
+          <SidebarButton
+            active={activeSection === "system"}
+            onClick={() => setActiveSection("system")}
+            icon={FaDesktop}
+            label="System"
+          />
+          <SidebarButton
+            active={activeSection === "network"}
+            onClick={() => setActiveSection("network")}
+            icon={FaNetworkWired}
+            label="Network"
+          />
+          <SidebarButton
+            active={activeSection === "active_directory"}
+            onClick={() => setActiveSection("active_directory")}
+            icon={FaUserAlt}
+            label="Active Directory"
+          />
+          <SidebarButton
+            active={activeSection === "install"}
+            onClick={() => setActiveSection("install")}
+            icon={FaTasks}
+            label="Install"
+          />
+          <hr style={{
+            border: 'none',
+            height: '2px',
+            backgroundColor: '#CCC5B9',
+            margin: '15px'
+          }} />
+
+      <div className="bottom-buttons">
+      <SidebarButton
+            active={activeSection === "settings"}
+            onClick={() => setActiveSection("settings")}
+            icon={FaCogs}
+            label="Settings"
+  />
+      </div>
+        </aside>
+        <main className="main-content">
+          <div className="target-machine-field" style={{ margin: "20px", padding: "10px" }}>
             <input
               type="text"
               placeholder="Enter machine name or IP"
@@ -68,142 +367,47 @@ function App() {
               Submit
             </button>
           </div>
-        </div>
-        <div className="navbar-right">
-          <FaCog className="icon settings-icon" />
-          <img src="/profile.png" alt="Profile" className="profile-pic" />
-        </div>
-      </nav>
+          {/* New special header container */}
+          <div className="special-header-container">
+  {/* SVG shape for the header */}
+  <svg
+    className="tab-shape"
+    viewBox="0 0 900 158"
+    preserveAspectRatio="xMidYMax meet"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M -95,200 C 80,120 120,50 190,20 H 898 V 200 Z"
+      fill="#252422"
+      stroke="#EB5E28"
+      strokeWidth="4"
+    />
+  </svg>
 
-      <div className="content-container">
-        {/* Sidebar */}
-        <aside className={`sidebar ${sidebarOpen ? "open" : "collapsed"}`}>
-          <img src="/logoseal.png" alt="logo" className="sidebar-logo" />
-          <ul>
-            <li 
-              className={activeSection === "dashboard" ? "active-item" : ""}
-              onClick={() => setActiveSection("dashboard")}
-            >
-              <FaTachometerAlt className="sidebar-icon" /> 
-              {sidebarOpen && "Dashboard"}
-            </li>
-            <li 
-              className={activeSection === "system" ? "active-item" : ""}
-              onClick={() => setActiveSection("system")}
-            >
-              <FaDesktop className="sidebar-icon" /> 
-              {sidebarOpen && "System"}
-            </li>
-            <li 
-              className={activeSection === "network" ? "active-item" : ""}
-              onClick={() => setActiveSection("network")}
-            >
-              <FaNetworkWired className="sidebar-icon" /> 
-              {sidebarOpen && "Network"}
-            </li>
-            <li 
-              className={activeSection === "active_directory" ? "active-item" : ""}
-              onClick={() => setActiveSection("active_directory")}
-            >
-              <FaUserAlt className="sidebar-icon" /> 
-              {sidebarOpen && "Active Directory"}
-            </li>
-          </ul>
-          <button className="sidebar-toggle" onClick={() => setSidebarOpen(!sidebarOpen)}>
-            {sidebarOpen ? "<<" : ">>"}
-          </button>
-        </aside>
+  {/* Quick-action buttons overlaid on top of the SVG */}
+  <div className="quick-actions">
+  <SidebarButton
+            active={activeSection === "install"}
+            onClick={() => setActiveSection("install")}
+            icon={FaPodcast}
+            label="Ping"
+  />
+  <SidebarButton
+            active={activeSection === "install"}
+            onClick={() => setActiveSection("install")}
+            icon={FaUndo}
+            label="Restart"
+  />
+  <SidebarButton
+            active={activeSection === "install"}
+            onClick={() => setActiveSection("install")}
+            icon={FaPowerOff}
+            label="Shutdown"  
+  />          
+      </div>
+</div>
 
-        {/* Main Content */}
-        <main className="main-content">
-          {activeSection === "dashboard" && (
-            <div className="xip-section" key={activeSection}>
-              <h1 className="dashboard-title">Dashboard</h1>
-              <div className="stats-container">
-                <div className="stat-card">System Uptime: 5h 12m</div>
-                <div className="stat-card">CPU Usage: 23%</div>
-                <div className="stat-card">Memory Usage: 68%</div>
-                <div className="stat-card">OS Version: --</div>
-                <div className="stat-card">Current User: --</div>
-              </div>
-            </div>
-          )}
-
-          {activeSection === "system" && (
-            <div className="xip-section" key={activeSection}>
-              <h1>Hardware</h1>
-              <div className="xip-action-grid">
-                <button className="xip-action-button">Hardware Info</button>
-                <button className="xip-action-button">Printers</button>
-                <button className="xip-action-button">USB Devices</button>
-                <button className="xip-action-button">Restart System</button>
-                <button className="xip-action-button">Shutdown System</button>
-              </div>
-              <h1>System Management</h1>
-              <div className="xip-action-grid">
-                <button className="xip-action-button">Local Users</button>
-                <button className="xip-action-button">Local Groups</button>
-                <button className="xip-action-button">Shares</button>
-                <button className="xip-action-button">C$</button>
-                <button className="xip-action-button">Event Viewer</button>
-                <button className="xip-action-button">Services</button>
-                <button className="xip-action-button">Computer Mgmt</button>
-              </div>
-            </div>
-          )}
-
-          {activeSection === "network" && (
-            <div className="xip-section" key={activeSection}>
-              <h1>Network</h1>
-              <div className="xip-action-grid">
-                <button className="xip-action-button" onClick={handlePing}>
-                  Ping Machine
-                </button>
-                <button className="xip-action-button">Check IP Config</button>
-                <button className="xip-action-button">Trace Route</button>
-                <button className="xip-action-button">Check Open Ports</button>
-                <button className="xip-action-button">SMPT Telnet Test</button>
-                <button onClick={handleTestCurrentUser}>Test Get Current User</button>
-
-              </div>
-            </div>
-          )}
-
-          {activeSection === "active_directory" && (
-            <div className="xip-section" key={activeSection}>
-              <h1>Active Directory</h1>
-              <div className="xip-action-grid">
-                <button className="xip-action-button">List Users</button>
-                <button className="xip-action-button">List Groups</button>
-                <button className="xip-action-button">Reset Password</button>
-                <button className="xip-action-button">Create User</button>
-                <button className="xip-action-button">Sync Status</button>
-              </div>
-            </div>
-          )}
-
-          <div className="terminal-panel-container" key="terminal">
-            <div
-              className="terminal-panel-header"
-              onClick={() => setTerminalOpen(!terminalOpen)}
-            >
-              <div className="terminal-title">
-                <FaTerminal className="icon" />
-                <span>Terminal Output</span>
-              </div>
-              <button className="terminal-toggle">
-                {terminalOpen ? "Collapse" : "Expand"}
-              </button>
-            </div>
-            <div
-              className="terminal-panel"
-              style={{ maxHeight: terminalOpen ? "200px" : "0px" }}
-            >
-              <div className="terminal-output">
-                <pre>{terminalOutput}</pre>
-              </div>
-            </div>
-          </div>
+          {renderGridContent()}
         </main>
       </div>
     </div>

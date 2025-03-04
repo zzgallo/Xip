@@ -91,6 +91,7 @@ fn ping(state: State<AppState>) -> Result<String, String> {
 
 /// Retrieves the current logged-on user from the target machine via remote PowerShell.
 /// It runs the "whoami" command on the remote machine.
+/// whoami returns the administrator user thats remoted into PowerShell. Using Get_WMIObject
 #[tauri::command]
 fn get_current_user(state: State<AppState>) -> Result<String, String> {
     let t = state.target_machine.lock().map_err(|e| e.to_string())?;
