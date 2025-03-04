@@ -24,11 +24,11 @@ html, body, #root {
   align-items: center;
   gap: 10px;
   padding: 10px 20px;
-  background-color: #252422;  /* light background for contrast */
-  border: 1px solid #EB5E28;  /* accent border matching your palette */
+  background-color: #252422; 
+  border: 1px solid #EB5E28; 
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  margin: 20px; /* adjust spacing as needed */
+  margin: 20px; 
 }
 
 /* Style for the input field */
