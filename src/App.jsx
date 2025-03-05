@@ -90,17 +90,85 @@ function App() {
     }));
   };
 
+  // Open C$
+  const handleOpenCShare = async () => {
+    try {
+      await invoke("open_c_share");
+    } catch (error) {
+      setTerminalOutput('Error Opening C$: ${error}')
+    }
+  };
+
+  // Open lusrmgr.msc
+  const handleOpenUsersGroups = async () => {
+    try {
+      await invoke("open_lusrmgr");
+    } catch (error) {
+      console.error("Error from open_lusrmgr:", error);
+      setTerminalOutput(`Error Opening Users & Groups: ${error.toString()}`);
+    }
+  };
+  ;
+
+  // Open Shares
+  const handleOpenShares = async () => {
+    try {
+      await invoke("open_shares");
+    } catch (error) {
+      setTerminalOutput(`Error Opening Shares: ${error.toString()}`);
+    }
+  };
+
+  // Open Services
+  const handleOpenServices = async () => {
+    try {
+      await invoke("open_services");
+    } catch (error) {
+      console.error("Error from open_services:", error);
+      setTerminalOutput(`Error Opening Services: ${error.toString()}`);
+    }
+  }
+
+  // Open Event Viewer
+  const handleOpenEventViewer = async () => {
+    try {
+      await invoke("open_eventvwr");
+    } catch (error) {
+      console.error("Error from open_eventvwr:", error);
+      setTerminalOutput(`Error Opening Event Viewer: ${error.toString()}`);
+    }
+  }
+
+  // Open Computer Management
+  const handleOpenCompMgmt = async () => {
+    try {
+      await invoke("open_compmgmt");
+    } catch (error) {
+      console.error("Error from open_compmgmt:", error);
+      setTerminalOutput(`Error Opening Computer Management: ${error.toString()}`);
+    }
+  }
+
+  const handleOpenDiskMgmt = async () => {
+    try {
+      await invoke("open_diskmgmt");
+    } catch (error) {
+      console.error("Error from open_diskmgmt:", error);
+      setTerminalOutput(`Error Opening Disk Management: ${error.toString()}`);
+    }
+  }
+  
   // Content for interactive grid sections:
   const systemActionButtons = (
     <div className="xip-action-grid">
       <h3 className="panel-title">System Actions</h3>
-      <button className="xip-action-button">Local Users</button>
-      <button className="xip-action-button">Local Groups</button>
-      <button className="xip-action-button">Shares</button>
-      <button className="xip-action-button">C$</button>
-      <button className="xip-action-button">Event Viewer</button>
-      <button className="xip-action-button">Services</button>
-      <button className="xip-action-button">Computer Mgmt</button>
+      <button className="xip-action-button" onClick={handleOpenUsersGroups}>Local Users & Groups</button>
+      <button className="xip-action-button" onClick={handleOpenDiskMgmt}>Disk Management</button>
+      <button className="xip-action-button" onClick={handleOpenShares}>Shares</button>
+      <button className="xip-action-button" onClick={handleOpenCShare}>C$</button>
+      <button className="xip-action-button" onClick={handleOpenEventViewer}>Event Viewer</button>
+      <button className="xip-action-button" onClick={handleOpenServices}>Services</button>
+      <button className="xip-action-button" onClick={handleOpenCompMgmt}>Computer Management</button>
     </div>
   );
 

@@ -101,6 +101,129 @@ fn get_current_user(state: State<AppState>) -> Result<String, String> {
     remote_command(&*t, "(Get-WmiObject -Class Win32_ComputerSystem).UserName")
 }
 
+// Open C$
+#[tauri::command]
+fn open_c_share(state: State<AppState>) -> Result<(), String> {
+    let t = state.target_machine.lock().map_err(|e| e.to_string())?;
+    if t.trim().is_empty() {
+        return Err("No target machine set".into());
+    }
+    // Construct the UNC path. Note the double backslashes for Windows UNC syntax.
+    let unc_path = format!("\\\\{}\\c$", t);
+    println!("Opening C$ share at: {}", unc_path);
+    
+    // Launch Windows Explorer with the UNC path.
+    std::process::Command::new("explorer.exe")
+        .arg(unc_path)
+        .spawn()
+        .map_err(|e| format!("Failed to open C$ share: {}", e))?;
+    Ok(())
+}
+
+#[tauri::command]
+fn open_lusrmgr(state: State<AppState>) -> Result<(), String> {
+    let t = state.target_machine.lock().map_err(|e| e.to_string())?;
+    if t.trim().is_empty() {
+        return Err("No target machine set".into());
+    }
+    // Construct the argument string to open lusrmgr.msc for the remote target.
+    let computer_arg = format!("/computer:{}", t);
+    println!("Opening lusrmgr.msc on target: {}", t);
+    
+    std::process::Command::new("mmc.exe")
+        .arg("lusrmgr.msc")
+        .arg(computer_arg)
+        .spawn()
+        .map_err(|e| format!("Failed to open lusrmgr.msc: {}", e))?;
+    Ok(())
+}
+
+#[tauri::command]
+fn open_shares(state: State<AppState>) -> Result<(), String> {
+    let t = state.target_machine.lock().map_err(|e| e.to_string())?;
+    if t.trim().is_empty() {
+        return Err("No target machine set".into());
+    }
+    // Construct the UNC path to open the root of the target machine's shares.
+    let computer_arg = format!("/computer:{}", t);
+    println!("Opening shares at: {}", t);
+
+    std::process::Command::new("mmc.exe")
+        .arg("fsmgmt.msc")
+        .arg(computer_arg)
+        .spawn()
+        .map_err(|e| format!("Failed to open shares: {}", e))?;
+    Ok(())
+}
+
+#[tauri::command]
+fn open_services(state: State<AppState>) -> Result<(), String> {
+    let t = state.target_machine.lock().map_err(|e| e.to_string())?;
+    if t.trim().is_empty() {
+        return Err("No target machine set".into());
+    }
+    let computer_arg = format!("/computer:{}", t);
+    println!("Opening services at: {}", t);
+
+    std::process::Command::new("mmc.exe")
+        .arg("services.msc")
+        .arg(computer_arg)
+        .spawn()
+        .map_err(|e| format!("Failed to open services: {}", e))?;
+    Ok(())
+}
+
+#[tauri::command]
+fn open_eventvwr(state: State<AppState>) -> Result<(), String> {
+    let t = state.target_machine.lock().map_err(|e| e.to_string())?;
+    if t.trim().is_empty() {
+        return Err("No target machine set".into());
+    }
+    let computer_arg = format!("/computer:{}", t);
+    println!("Opening Event Viewer at: {}", t);
+
+    std::process::Command::new("mmc.exe")
+        .arg("eventvwr.msc")
+        .arg(computer_arg)
+        .spawn()
+        .map_err(|e| format!("Failed to open Event Viewer: {}", e))?;
+    Ok(())
+}
+
+#[tauri::command]
+fn open_compmgmt(state: State<AppState>) -> Result<(), String> {
+    let t = state.target_machine.lock().map_err(|e| e.to_string())?;
+    if t.trim().is_empty() {
+        return Err("No target machine set".into());
+    }
+    let computer_arg = format!("/computer:{}", t);
+    println!("Opening Computer Management at: {}", t);
+
+    std::process::Command::new("mmc.exe")
+        .arg("compmgmt.msc")
+        .arg(computer_arg)
+        .spawn()
+        .map_err(|e| format!("Failed to open Computer Management: {}", e))?;
+    Ok(())
+}
+
+#[tauri::command]
+fn open_diskmgmt(state: State<AppState>) -> Result<(), String> {
+    let t = state.target_machine.lock().map_err(|e| e.to_string())?;
+    if t.trim().is_empty() {
+        return Err("No target machine set".into());
+    }
+    let computer_arg = format!("/computer:{}", t);
+    println!("Opening Disk Management at: {}", t);
+
+    std::process::Command::new("mmc.exe")
+        .arg("diskmgmt.msc")
+        .arg(computer_arg)
+        .spawn()
+        .map_err(|e| format!("Failed to open Disk Management: {}", e))?;
+    Ok(())
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -111,7 +234,14 @@ pub fn run() {
             set_target,
             ping,
             get_current_user,
-            remote_command
+            remote_command,
+            open_c_share,
+            open_lusrmgr,
+            open_shares,
+            open_services,
+            open_eventvwr,
+            open_compmgmt,
+            open_diskmgmt
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
