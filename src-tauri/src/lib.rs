@@ -80,13 +80,57 @@ fn ping(state: State<AppState>) -> Result<String, String> {
     if t.is_empty() {
         return Err("No target machine set".into());
     }
-    let output = Command::new("shutdown")
-        .arg("-r")
+    let output = Command::new("ping")
+        .arg("-n")
         .arg("2")
         .arg(&*t)
         .creation_flags(0x08000000)
         .output()
         .map_err(|e| format!("Failed to execute ping: {}", e))?;
+    let result = String::from_utf8_lossy(&output.stdout).to_string();
+    Ok(result)
+}
+
+#[tauri::command]
+fn issue_restart(state: State<AppState>) -> Result<String, String> {
+    let t = state.target_machine.lock().map_err(|e| e.to_string())?;
+    if t.is_empty() {
+        return Err("No target machine set".into());
+    }
+    let output = Command::new("cmd")
+        .args(&[
+            "/C", 
+            "shutdown", 
+            "/r", 
+            "/t", 
+            "0", 
+            "/m", 
+            &format!("\\\\{}", *t)
+        ])
+        .output()
+        .map_err(|e| format!("Failed to execute restart: {}", e))?;
+    let result = String::from_utf8_lossy(&output.stdout).to_string();
+    Ok(result)
+}
+
+#[tauri::command]
+fn issue_shutdown(state: State<AppState>) -> Result<String, String> {
+    let t = state.target_machine.lock().map_err(|e| e.to_string())?;
+    if t.is_empty() {
+        return Err("No target machine set".into());
+    }
+    let output = Command::new("cmd")
+        .args(&[
+            "/C", 
+            "shutdown", 
+            "/s", 
+            "/t", 
+            "0", 
+            "/m", 
+            &format!("\\\\{}", *t)
+        ])
+        .output()
+        .map_err(|e| format!("Failed to execute shutdown: {}", e))?;
     let result = String::from_utf8_lossy(&output.stdout).to_string();
     Ok(result)
 }
@@ -264,7 +308,9 @@ pub fn run() {
             open_compmgmt,
             open_diskmgmt,
             get_ipconfig,
-            open_aduc
+            open_aduc,
+            issue_restart,
+            issue_shutdown
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

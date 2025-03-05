@@ -72,6 +72,27 @@ function App() {
     }
   };
 
+  const handleRestart = async () => {
+    try {
+      setTerminalOutput("Restarting target machine...");
+      const result = await invoke("issue_restart");
+      setTerminalOutput(result);
+    } catch (error) {
+      setTerminalOutput(`Restart error: ${error}`);
+    }
+  };
+
+  const handleShutdown = async () => {
+    try {
+      setTerminalOutput("Shutting down target machine...");
+      const result = await invoke("issue_shutdown");
+      setTerminalOutput(result);
+    } catch (error) {
+      setTerminalOutput(`Shutdown error: ${error}`);
+    }
+  };
+  
+
   const handleTestCurrentUser = async () => {
     try {
       const user = await invoke("get_current_user");
@@ -481,13 +502,13 @@ function App() {
   />
   <SidebarButton
             active={activeSection === "install"}
-            onClick={() => setActiveSection("install")}
+            onClick={handleRestart}
             icon={FaUndo}
             label="Restart"
   />
   <SidebarButton
             active={activeSection === "install"}
-            onClick={() => setActiveSection("install")}
+            onClick={handleShutdown}
             icon={FaPowerOff}
             label="Shutdown"  
   />          
