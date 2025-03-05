@@ -1,3 +1,4 @@
+use std::os::windows::process::CommandExt;
 use std::sync::Mutex;
 use std::process::Command;
 use std::net::IpAddr;
@@ -79,10 +80,11 @@ fn ping(state: State<AppState>) -> Result<String, String> {
     if t.is_empty() {
         return Err("No target machine set".into());
     }
-    let output = Command::new("ping")
-        .arg("-n")
+    let output = Command::new("shutdown")
+        .arg("-r")
         .arg("2")
         .arg(&*t)
+        .creation_flags(0x08000000)
         .output()
         .map_err(|e| format!("Failed to execute ping: {}", e))?;
     let result = String::from_utf8_lossy(&output.stdout).to_string();
@@ -99,6 +101,15 @@ fn get_current_user(state: State<AppState>) -> Result<String, String> {
         return Err("No target machine set".into());
     }
     remote_command(&*t, "(Get-WmiObject -Class Win32_ComputerSystem).UserName")
+}
+
+#[tauri::command]
+fn get_ipconfig(state: State<AppState>) -> Result<String, String> {
+    let t = state.target_machine.lock().map_err(|e| e.to_string())?;
+    if t.is_empty() {
+        return Err("No target machine set".into());
+    }
+    remote_command(&*t, "(ipconfig /all)")
 }
 
 // Open C$
@@ -224,6 +235,16 @@ fn open_diskmgmt(state: State<AppState>) -> Result<(), String> {
     Ok(())
 }
 
+#[tauri::command]
+fn open_aduc() -> Result<(), String> {
+    println!("Opening Active Directory");
+    std::process::Command::new("mmc.exe")
+        .arg("dsa.msc")
+        .spawn()
+        .map_err(|e| format!("failed to open Active Directory: {}", e))?;
+    Ok(())
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -241,8 +262,11 @@ pub fn run() {
             open_services,
             open_eventvwr,
             open_compmgmt,
-            open_diskmgmt
+            open_diskmgmt,
+            get_ipconfig,
+            open_aduc
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
+

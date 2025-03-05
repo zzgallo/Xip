@@ -99,6 +99,16 @@ function App() {
     }
   };
 
+  // Show Ipconfig /all
+  const handleGetIPConfig = async () => {
+    try {
+      const ipconfig = await invoke("get_ipconfig");
+      setTerminalOutput(`${ipconfig}`);
+    } catch (error) {
+      setTerminalOutput(`Error: ${error}`);
+    }
+  };
+
   // Open lusrmgr.msc
   const handleOpenUsersGroups = async () => {
     try {
@@ -157,6 +167,15 @@ function App() {
       setTerminalOutput(`Error Opening Disk Management: ${error.toString()}`);
     }
   }
+
+  const handleOpenADUC = async () => {
+    try {
+      await invoke("open_aduc");
+    } catch (error) {
+        console.error("Error from open_aduc:", error);
+        setTerminalOutput(`Error Opening Active Directory: ${error.toString()}`);
+      }
+    }
   
   // Content for interactive grid sections:
   const systemActionButtons = (
@@ -178,7 +197,7 @@ function App() {
       <button className="xip-action-button" onClick={handlePing}>
         Ping Machine
       </button>
-      <button className="xip-action-button">Check IP Config</button>
+      <button className="xip-action-button" onClick={handleGetIPConfig}>Check IP Config</button>
       <button className="xip-action-button">Trace Route</button>
       <button className="xip-action-button">Open Ports</button>
       <button className="xip-action-button" onClick={handleTestCurrentUser}>
@@ -190,7 +209,7 @@ function App() {
   const adActionButtons = (
     <div className="xip-action-grid">
       <h3 className="panel-title">Active Directory Actions</h3>
-      <button className="xip-action-button">List Users</button>
+      <button className="xip-action-button" onClick={handleOpenADUC}>Active Directory Users & Computers</button>
       <button className="xip-action-button">List Groups</button>
       <button className="xip-action-button">Reset Password</button>
       <button className="xip-action-button">Create User</button>
@@ -456,7 +475,7 @@ function App() {
   <div className="quick-actions">
   <SidebarButton
             active={activeSection === "install"}
-            onClick={() => setActiveSection("install")}
+            onClick={handlePing}
             icon={FaPodcast}
             label="Ping"
   />
