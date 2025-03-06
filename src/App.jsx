@@ -73,6 +73,9 @@ function App() {
   };
 
   const handleRestart = async () => {
+    if (!window.confirm("Are you sure you want to RESTART the remote machine?")) {
+      return; // 
+    }
     try {
       setTerminalOutput("Restarting target machine...");
       const result = await invoke("issue_restart");
@@ -83,6 +86,9 @@ function App() {
   };
 
   const handleShutdown = async () => {
+    if (!window.confirm("Are you sure you want to SHUTDOWN the remote machine?")) {
+      return; // 
+    }
     try {
       setTerminalOutput("Shutting down target machine...");
       const result = await invoke("issue_shutdown");
@@ -255,10 +261,10 @@ function App() {
         <div className="info-panel">
           <h3 className="panel-title">System Information</h3>
           <div className="info-content">
-            <p>OS: Windows Server 2019</p>
-            <p>CPU: Intel Xeon E5-2680 v4</p>
-            <p>Memory: 32GB DDR4</p>
-            <p>Disk: 500GB SSD</p>
+            <p>OS: null</p>
+            <p>CPU: null</p>
+            <p>Memory: null</p>
+            <p>Disk: null</p>
           </div>
         </div>
       );
@@ -267,10 +273,10 @@ function App() {
         <div className="info-panel">
           <h3 className="panel-title">Network Status</h3>
           <div className="info-content">
-            <p>IP Address: 192.168.1.100</p>
-            <p>Subnet Mask: 255.255.255.0</p>
-            <p>Gateway: 192.168.1.1</p>
-            <p>DNS: 8.8.8.8, 8.8.4.4</p>
+            <p>IP Address: null</p>
+            <p>Subnet Mask: null</p>
+            <p>Gateway: null</p>
+            <p>DNS: null</p>
           </div>
         </div>
       );
@@ -279,10 +285,10 @@ function App() {
         <div className="info-panel">
           <h3 className="panel-title">AD Domain Information</h3>
           <div className="info-content">
-            <p>Domain: example.local</p>
-            <p>Forest Functional Level: 2016</p>
-            <p>Domain Controllers: 2</p>
-            <p>Total Users: 256</p>
+            <p>Domain: null</p>
+            <p>null</p>
+            <p>null</p>
+            <p>null</p>
           </div>
         </div>
       );
@@ -295,10 +301,10 @@ function App() {
         <div className="info-panel">
           <h3 className="panel-title">System Performance</h3>
           <div className="info-content">
-            <p>CPU Usage: 23%</p>
-            <p>Memory Usage: 68%</p>
-            <p>Disk I/O: 12MB/s</p>
-            <p>Uptime: 5d 12h 34m</p>
+            <p>CPU Usage: null</p>
+            <p>Memory Usage: null</p>
+            <p>Disk I/O: null</p>
+            <p>Uptime: null</p>
           </div>
         </div>
       );
@@ -307,10 +313,10 @@ function App() {
         <div className="info-panel">
           <h3 className="panel-title">Network Traffic</h3>
           <div className="info-content">
-            <p>Upload: 1.2 MB/s</p>
-            <p>Download: 5.7 MB/s</p>
-            <p>Active Connections: 32</p>
-            <p>Packets Lost: 0.1%</p>
+            <p>Upload: null</p>
+            <p>Download: null</p>
+            <p>Active Connections: null</p>
+            <p>Packets Lost: null</p>
           </div>
         </div>
       );
@@ -319,10 +325,10 @@ function App() {
         <div className="info-panel">
           <h3 className="panel-title">Recent AD Events</h3>
           <div className="info-content">
-            <p>Last Password Change: 2h ago</p>
-            <p>Group Policy Update: 4h ago</p>
-            <p>New User Accounts: 3 today</p>
-            <p>Account Lockouts: 1 today</p>
+            <p>Last Password Change: null</p>
+            <p>Group Policy Update: null</p>
+            <p>New User Accounts: null</p>
+            <p>Account Lockouts: null</p>
           </div>
         </div>
       );
