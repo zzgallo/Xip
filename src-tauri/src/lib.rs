@@ -263,7 +263,7 @@ fn open_compmgmt(state: State<AppState>) -> Result<(), String> {
 }
 
 #[tauri::command]
-fn open_diskmgmt(state: State<AppState>) -> Result<(), String> {
+fn open_devicemgr(state: State<AppState>) -> Result<(), String> {
     let t = state.target_machine.lock().map_err(|e| e.to_string())?;
     if t.trim().is_empty() {
         return Err("No target machine set".into());
@@ -272,10 +272,10 @@ fn open_diskmgmt(state: State<AppState>) -> Result<(), String> {
     println!("Opening Disk Management at: {}", t);
 
     std::process::Command::new("mmc.exe")
-        .arg("diskmgmt.msc")
+        .arg("devmgmt.msc")
         .arg(computer_arg)
         .spawn()
-        .map_err(|e| format!("Failed to open Disk Management: {}", e))?;
+        .map_err(|e| format!("Failed to open Device Manager: {}", e))?;
     Ok(())
 }
 
@@ -285,7 +285,54 @@ fn open_aduc() -> Result<(), String> {
     std::process::Command::new("mmc.exe")
         .arg("dsa.msc")
         .spawn()
-        .map_err(|e| format!("failed to open Active Directory: {}", e))?;
+        .map_err(|e| format!("Failed to open Active Directory: {}", e))?;
+    Ok(())
+}
+
+#[tauri::command]
+fn open_dhcp() -> Result<(), String> {
+    println!("Opening DHCP");
+    std::process::Command::new("mmc.exe")
+        .arg("dhcpmgmt.msc")
+        .spawn()
+        .map_err(|e| format!("Failed to open DHCP: {}", e))?;
+    Ok(())
+}
+
+#[tauri::command]
+fn open_dns() -> Result<(), String> {
+    println!("Opening DNS");
+    std::process::Command::new("mmc.exe")
+        .arg("dnsmgmt.msc")
+        .spawn()
+        .map_err(|e| format!("Failed to open DNS: {}", e))?;
+    Ok(())
+}
+
+#[tauri::command]
+fn open_gpu() -> Result<(), String> {
+    println!("Opening Group Policy");
+    std::process::Command::new("mmc.exe")
+        .arg("gpmc.msc")
+        .spawn()
+        .map_err(|e| format!("Failed to open Group Policy: {}", e))?;
+    Ok(())
+}
+
+#[tauri::command]
+fn open_perfmon(state: State<AppState>) -> Result<(), String> {
+    let t = state.target_machine.lock().map_err(|e| e.to_string())?;
+    if t.trim().is_empty() {
+        return Err("No target machine set".into());
+    }
+    let computer_arg = format!("/computer:{}", t);
+    println!("Opening Performance Monitor at: {}", t);
+
+    std::process::Command::new("mmc.exe")
+        .arg("perfmon")
+        .arg(computer_arg)
+        .spawn()
+        .map_err(|e| format!("Failed to open Performance Monitor: {}", e))?;
     Ok(())
 }
 
@@ -306,11 +353,15 @@ pub fn run() {
             open_services,
             open_eventvwr,
             open_compmgmt,
-            open_diskmgmt,
+            open_devicemgr,
             get_ipconfig,
             open_aduc,
             issue_restart,
-            issue_shutdown
+            issue_shutdown,
+            open_dhcp,
+            open_dns,
+            open_gpu,
+            open_perfmon
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

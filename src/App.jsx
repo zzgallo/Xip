@@ -186,12 +186,12 @@ function App() {
     }
   }
 
-  const handleOpenDiskMgmt = async () => {
+  const handleOpenDevicemgr = async () => {
     try {
-      await invoke("open_diskmgmt");
+      await invoke("open_devicemgr");
     } catch (error) {
-      console.error("Error from open_diskmgmt:", error);
-      setTerminalOutput(`Error Opening Disk Management: ${error.toString()}`);
+      console.error("Error from open_devicemgr:", error);
+      setTerminalOutput(`Error Opening Device Manager: ${error.toString()}`);
     }
   }
 
@@ -203,18 +203,58 @@ function App() {
         setTerminalOutput(`Error Opening Active Directory: ${error.toString()}`);
       }
     }
+
+    const handleOpenDHCP = async () => {
+      try {
+        await invoke("open_dhcp");
+      } catch (error) {
+          console.error("Error from open_dhcp:", error);
+          setTerminalOutput(`Error Opening DHCP: ${error.toString()}`);
+        }
+      }
+
+      const handleOpenDNS = async () => {
+        try {
+          await invoke("open_dns");
+        } catch (error) {
+            console.error("Error from open_dns:", error);
+            setTerminalOutput(`Error Opening DNS: ${error.toString()}`);
+          }
+        }
+
+      const handleOpenGPU = async () => {
+        try {
+          await invoke("open_gpu");
+        } catch (error) {
+            console.error("Error from open_gpu:", error);
+            setTerminalOutput(`Error Opening Group Policy: ${error.toString()}`);
+          }
+        }
+
+      const handleOpenPerfMon = async () => {
+        try {
+          await invoke("open_perfmon");
+        } catch (error) {
+            console.error("Error from open_perfmon:", error);
+            setTerminalOutput(`Error Opening Performance Monitor: ${error.toString()}`);
+          }
+        } 
   
   // Content for interactive grid sections:
   const systemActionButtons = (
     <div className="xip-action-grid">
       <h3 className="panel-title">System Actions</h3>
       <button className="xip-action-button" onClick={handleOpenUsersGroups}>Local Users & Groups</button>
-      <button className="xip-action-button" onClick={handleOpenDiskMgmt}>Disk Management</button>
+      <button className="xip-action-button" onClick={handleTestCurrentUser}>
+        Get Current User
+      </button>
+      <button className="xip-action-button" onClick={handleOpenDevicemgr}>Device Manager</button>
       <button className="xip-action-button" onClick={handleOpenShares}>Shares</button>
       <button className="xip-action-button" onClick={handleOpenCShare}>C$</button>
       <button className="xip-action-button" onClick={handleOpenEventViewer}>Event Viewer</button>
       <button className="xip-action-button" onClick={handleOpenServices}>Services</button>
       <button className="xip-action-button" onClick={handleOpenCompMgmt}>Computer Management</button>
+      <button className="xip-action-button" onClick={handleOpenPerfMon}>Performance Monitor</button>
     </div>
   );
 
@@ -227,9 +267,10 @@ function App() {
       <button className="xip-action-button" onClick={handleGetIPConfig}>Check IP Config</button>
       <button className="xip-action-button">Trace Route</button>
       <button className="xip-action-button">Open Ports</button>
-      <button className="xip-action-button" onClick={handleTestCurrentUser}>
-        Test Current User
-      </button>
+      <button className="xip-action-button" onClick={handleOpenDHCP}>Open DHCP</button>
+      <button className="xip-action-button" onClick={handleOpenDNS}>Open DNS</button>
+      <button className="xip-action-button" onClick={handleOpenGPU}>Open Group Policy</button>
+
     </div>
   );
 
