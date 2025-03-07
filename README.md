@@ -53,8 +53,30 @@ On remote machines, **Xip** allows you to run several useful commands and retrie
 
 ### 🚧 **In Development**
 
-While **Xip** already offers many powerful features, it’s still in heavy development! We have many exciting features planned, which you can find in our **[Roadmap](#)**.
+While **Xip** already offers many powerful features, it’s still in heavy development! We have many exciting features planned, which you can find in our **[Roadmap](#🌎Roadmap)**.
 
 ---
 
-<h1>👉Installation</h1>
+<h1>🌎Roadmap</h1>
+
+The following is the roadmap for this project. Nothing is set in stone, and all suggestions are appreciated.
+
+### v0.1.0 - Launch Edition
+- [x] Basic Computer Management
+- [x] DHCP, DNS, Active Directory, & Group Policy integration
+- [x] Basic Network Tools
+- [x] Error handling and logging
+
+### v0.2.0 - Enhancements and Bug Fixes
+- [ ] Implement winget and chocolatey for local and remote installations
+- [ ] Allow easy implementation of private choco repos for custom applications
+- [ ] Implement custom UI design options
+- [ ] Fix bug related to authentication
+- [ ] Add support for user profiles
+- [ ] Implement search functionality
+- [ ] Redesign user interface
+- [ ] Improve documentation and tutorials
+- [ ] Explore AI integration for advanced features
+
+---
+
