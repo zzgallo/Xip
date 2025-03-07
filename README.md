@@ -53,7 +53,7 @@ On remote machines, **Xip** allows you to run several useful commands and retrie
 
 ### 🚧 **In Development**
 
-While **Xip** already offers many powerful features, it’s still in heavy development! We have many exciting features planned, which you can find in our **[Roadmap](#🌎Roadmap)**.
+While **Xip** already offers many powerful features, it’s still in heavy development! We have many exciting features planned, which you can find in our **[Roadmap](#Roadmap)**.
 
 ---
 
