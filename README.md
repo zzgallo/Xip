@@ -1,6 +1,6 @@
 # Xip
 <div align="center">
-  <img src="public/assets/favicon.ico" alt="Logo" width="200" />
+  <img src="public/favicon.ico" alt="Logo" width="200" />
 </div>
 
 <div align="center">
