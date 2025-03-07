@@ -75,7 +75,6 @@ The following is the roadmap for this project. Nothing is set in stone, and all 
 - [ ] Add support for user profiles
 - [ ] Implement search functionality
 - [ ] Redesign user interface
-- [ ] Improve documentation and tutorials
 - [ ] Explore AI integration for advanced features
 
 ---
