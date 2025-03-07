@@ -4,7 +4,7 @@
 </div>
 
 <div align="center">
-<h2>Xip is a remote IT administration tool designed to be tailored made for your environment. Built to be fast and lightweight using Tauri with a Rust backend.</h2>
+<h2>Xip is a remote IT administration tool designed to be a tailored made one stop shop for your environment. Built to be fast and lightweight using Tauri with a Rust backend.</h2>
 </div>
 
 ---
