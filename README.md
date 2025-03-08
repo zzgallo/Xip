@@ -68,7 +68,7 @@ The following is the roadmap for this project. Nothing is set in stone, and all 
 - [x] Basic Network Tools
 - [x] Error handling and logging
 
-### v0.2.0 - Enhancements and Bug Fixes
+### (Coming Soon)
 - [ ] Implement winget and chocolatey for local and remote installations
 - [ ] Allow easy implementation of private choco repos for custom applications
 - [ ] Implement custom UI design options
@@ -87,3 +87,13 @@ The following is the roadmap for this project. Nothing is set in stone, and all 
 - There is a small chance a process can get hung on the target machine when running Event Viewer. This locks the exe file, making it fully locked. End the process or restart both systems to fix.
 - Responsivness on ultrawides is incorrect. UI elements will be sized incorrectly.
 - Device Mananger opens the local machines devices instead of targeted machine.
+
+
+<h1>ℹ️Additional Information</h1>
+
+Xip is still in heavy development and is being working on quite frequently. This has been a learning and hobby project for myself, and I do appreciate all feedback. 
+
+
+<h1>Installation</h1>
+
+Use the installer under `src-tauri/target/bundles`
