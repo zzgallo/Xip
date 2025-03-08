@@ -53,7 +53,8 @@ On remote machines, **Xip** allows you to run several useful commands and retrie
 
 ### 🚧 **In Development**
 
-While **Xip** already offers many powerful features, it’s still in heavy development! We have many exciting features planned, which you can find in our **[Roadmap](#Roadmap)**.
+While **Xip** already offers many powerful features, it’s still in heavy development! We have many exciting features planned, which you can find in our **[Roadmap](#Roadmap)**. My main goal for this project
+is to allow users to completly customize a workflow that suits them best.
 
 ---
 
@@ -76,6 +77,13 @@ The following is the roadmap for this project. Nothing is set in stone, and all 
 - [ ] Implement search functionality
 - [ ] Redesign user interface
 - [ ] Explore AI integration for advanced features
-
+- [ ] Add RDP function, with option to replace with custom RDP. (Ex. RustDesk, DameWare, etc.)
+      
 ---
 
+<h1>🐛Known Bugs</h1>
+
+- Grid Panels can be lost off screen if sized too large. Only solution right now is to refresh the app
+- There is a small chance a process can get hung on the target machine when running Event Viewer. This locks the exe file, making it fully locked. End the process or restart both systems to fix.
+- Responsivness on ultrawides is incorrect. UI elements will be sized incorrectly.
+- Device Mananger opens the local machines devices instead of targeted machine.
