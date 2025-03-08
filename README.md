@@ -93,7 +93,3 @@ The following is the roadmap for this project. Nothing is set in stone, and all 
 
 Xip is still in heavy development and is being working on quite frequently. This has been a learning and hobby project for myself, and I do appreciate all feedback. 
 
-
-<h1>Installation</h1>
-
-Use the installer under `src-tauri/target/bundles`
