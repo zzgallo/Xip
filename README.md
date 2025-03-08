@@ -84,12 +84,12 @@ The following is the roadmap for this project. Nothing is set in stone, and all 
 <h1>🐛Known Bugs</h1>
 
 - Grid Panels can be lost off screen if sized too large. Only solution right now is to refresh the app
-- There is a small chance a process can get hung on the target machine when running Event Viewer. This locks the exe file, making it fully locked. End the process or restart both systems to fix.
+- There is a small chance a process can get hung on the target machine when running Event Viewer. This locks the exe file, making it untouchable. End the process or restart both systems to fix.
 - Responsivness on ultrawides is incorrect. UI elements will be sized incorrectly.
 - Device Mananger opens the local machines devices instead of targeted machine.
 
 
 <h1>ℹ️Additional Information</h1>
 
-Xip is still in heavy development and is being working on quite frequently. This has been a learning and hobby project for myself, and I do appreciate all feedback. 
+Xip is still in heavy development and is being worked on quite frequently. This has been a learning and hobby project for myself, and I do appreciate all feedback. 
 
