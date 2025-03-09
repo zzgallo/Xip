@@ -93,3 +93,7 @@ The following is the roadmap for this project. Nothing is set in stone, and all 
 <h1>ℹ️Additional Information</h1>
 
 Xip is still in **heavy** development and is being worked on quite frequently. This has been a learning and hobby project for myself, and I do appreciate all feedback.
+
+<h1>Installation</h1>
+
+You can find the initial pre-release v0.1.0-alpha under the releases section on in the repo. Alternatively, you can find the .exe in `src-tauri/target/release`. A unistaller is also included.
