@@ -75,7 +75,7 @@ The following is the roadmap for this project. Nothing is set in stone, and all 
 - [ ] Allow easy implementation of private choco repos for custom applications
 - [ ] Implement custom UI design options
 - [ ] Fix bug related to authentication
-- [x] Fix bug related to hanging processes (Next Version)
+- [x] Fix bug related to hanging processes (** Added in next version**)
 - [ ] Add support for user profiles
 - [ ] Implement search functionality
 - [ ] Redesign user interface
@@ -87,7 +87,7 @@ The following is the roadmap for this project. Nothing is set in stone, and all 
 <h1>🐛Known Bugs</h1>
 
 - Grid Panels can be lost off screen if sized too large. Only solution right now is to refresh the app
-- ~~There is a small chance (it happened once in hundreds of test during development) a process can get hung on the target machine when running Event Viewer. This locks the exe file, not allowing you to read, run, or modify the exe. End the process or restart both systems to fix.~~
+- ~~There is a small chance (it happened once in hundreds of test during development) a process can get hung on the target machine when running Event Viewer. This locks the exe file, not allowing you to read, run, or modify the exe. End the process or restart both systems to fix.~~ (**Resolved in next version**)
 - Responsivness on ultrawides is incorrect. UI elements will be sized incorrectly.
 - Device Mananger opens the local machines devices instead of targeted machine.
 
