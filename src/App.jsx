@@ -238,7 +238,17 @@ function App() {
             console.error("Error from open_perfmon:", error);
             setTerminalOutput(`Error Opening Performance Monitor: ${error.toString()}`);
           }
+        }
+      const handleOpenPrintMGR = async () => {
+        try {
+          await invoke("open_printmgr");
+        } catch (error) {
+            console.error("Error from open_printmgr:", error);
+            setTerminalOutput(`Error Opening Print Management: ${error.toString()}`);
+          }
         } 
+        
+      
   
   // Content for interactive grid sections:
   const systemActionButtons = (
@@ -255,6 +265,7 @@ function App() {
       <button className="xip-action-button" onClick={handleOpenServices}>Services</button>
       <button className="xip-action-button" onClick={handleOpenCompMgmt}>Computer Management</button>
       <button className="xip-action-button" onClick={handleOpenPerfMon}>Performance Monitor</button>
+      <button className="xip-action-button" onClick={handleOpenPrintMGR}>Print Manangement</button>
     </div>
   );
 

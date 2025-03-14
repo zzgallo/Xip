@@ -1,13 +1,41 @@
+use std::collections::HashMap;
 use std::os::windows::process::CommandExt;
-use std::sync::Mutex;
-use std::process::Command;
+use std::sync::{Arc, Mutex};
+use std::process::{Child, Command};
 use std::net::IpAddr;
+use std::time::Duration;
+use::std::thread;
 use tauri::State;
 use trust_dns_resolver::Resolver; // For reverse DNS lookup
 
 // Global state to hold the target machine as a Fully Qualified Domain Name (FQDN).
 struct AppState {
-    target_machine: Mutex<String>,
+    pub target_machine: Mutex<String>,
+}
+
+// ProcessTracker holds a hashmap of the process ID' to their Child handles
+pub struct ProcessTracker {
+    pub processes: Mutex<HashMap<u32, Child>>,
+}
+
+
+// Function that enforces a timeout on spawned processes
+fn enforce_timeout(pid: u32, timeout: Duration, tracker: Arc<ProcessTracker>) {
+    thread::spawn(move || {
+        thread::sleep(timeout);
+        let mut processes = tracker.processes.lock().unwrap();
+        if let Some(mut child) = processes.remove(&pid) {
+            match child.try_wait() {
+                Ok(Some(status)) => {
+                    println!("Process {} completed with status: {:?}", pid, status);
+                }
+                _ => {
+                    println!("Process {} exceeded timeout; terminating...", pid);
+                    let _ = child.kill();
+                }
+            }
+        }
+    });
 }
 
 /// Executes a remote command via PowerShell remoting on the target machine.
@@ -158,8 +186,11 @@ fn get_ipconfig(state: State<AppState>) -> Result<String, String> {
 
 // Open C$
 #[tauri::command]
-fn open_c_share(state: State<AppState>) -> Result<(), String> {
-    let t = state.target_machine.lock().map_err(|e| e.to_string())?;
+fn open_c_share(
+    target_state: tauri::State<AppState>,
+    tracker: tauri::State<Arc<ProcessTracker>>
+    )-> Result<(), String> {
+    let t = target_state.target_machine.lock().map_err(|e| e.to_string())?;
     if t.trim().is_empty() {
         return Err("No target machine set".into());
     }
@@ -168,16 +199,30 @@ fn open_c_share(state: State<AppState>) -> Result<(), String> {
     println!("Opening C$ share at: {}", unc_path);
     
     // Launch Windows Explorer with the UNC path.
-    std::process::Command::new("explorer.exe")
+    let child = std::process::Command::new("explorer.exe")
         .arg(unc_path)
         .spawn()
         .map_err(|e| format!("Failed to open C$ share: {}", e))?;
+
+    let pid = child.id();
+
+    tracker
+        .processes
+        .lock()
+        .unwrap()
+        .insert(pid, child);
+
+    enforce_timeout(pid, std::time::Duration::from_secs(30), (*tracker).clone());
+
     Ok(())
 }
 
 #[tauri::command]
-fn open_lusrmgr(state: State<AppState>) -> Result<(), String> {
-    let t = state.target_machine.lock().map_err(|e| e.to_string())?;
+fn open_lusrmgr(
+    target_state: tauri::State<AppState>,
+    tracker: tauri::State<Arc<ProcessTracker>>
+    ) -> Result<(), String> {
+    let t = target_state.target_machine.lock().map_err(|e| e.to_string())?;
     if t.trim().is_empty() {
         return Err("No target machine set".into());
     }
@@ -185,17 +230,31 @@ fn open_lusrmgr(state: State<AppState>) -> Result<(), String> {
     let computer_arg = format!("/computer:{}", t);
     println!("Opening lusrmgr.msc on target: {}", t);
     
-    std::process::Command::new("mmc.exe")
+    let child = std::process::Command::new("mmc.exe")
         .arg("lusrmgr.msc")
         .arg(computer_arg)
         .spawn()
         .map_err(|e| format!("Failed to open lusrmgr.msc: {}", e))?;
+
+    let pid = child.id();
+
+    tracker
+        .processes
+        .lock()
+        .unwrap()
+        .insert(pid, child);
+
+    enforce_timeout(pid, std::time::Duration::from_secs(30), (*tracker).clone());
+
     Ok(())
 }
 
 #[tauri::command]
-fn open_shares(state: State<AppState>) -> Result<(), String> {
-    let t = state.target_machine.lock().map_err(|e| e.to_string())?;
+fn open_shares(
+    target_state: tauri::State<AppState>,
+    tracker: tauri::State<Arc<ProcessTracker>>
+    ) -> Result<(), String> {
+    let t = target_state.target_machine.lock().map_err(|e| e.to_string())?;
     if t.trim().is_empty() {
         return Err("No target machine set".into());
     }
@@ -203,79 +262,153 @@ fn open_shares(state: State<AppState>) -> Result<(), String> {
     let computer_arg = format!("/computer:{}", t);
     println!("Opening shares at: {}", t);
 
-    std::process::Command::new("mmc.exe")
+    let child = std::process::Command::new("mmc.exe")
         .arg("fsmgmt.msc")
         .arg(computer_arg)
         .spawn()
         .map_err(|e| format!("Failed to open shares: {}", e))?;
+
+    let pid = child.id();
+
+    tracker
+        .processes
+        .lock()
+        .unwrap()
+        .insert(pid, child);
+
+    enforce_timeout(pid, std::time::Duration::from_secs(30), (*tracker).clone());
+
     Ok(())
 }
 
 #[tauri::command]
-fn open_services(state: State<AppState>) -> Result<(), String> {
-    let t = state.target_machine.lock().map_err(|e| e.to_string())?;
+fn open_services(
+    target_state: tauri::State<AppState>,
+    tracker: tauri::State<Arc<ProcessTracker>>
+    ) -> Result<(), String> {
+    let t = target_state.target_machine.lock().map_err(|e| e.to_string())?;
     if t.trim().is_empty() {
         return Err("No target machine set".into());
     }
     let computer_arg = format!("/computer:{}", t);
     println!("Opening services at: {}", t);
 
-    std::process::Command::new("mmc.exe")
+    let child = std::process::Command::new("mmc.exe")
         .arg("services.msc")
         .arg(computer_arg)
         .spawn()
         .map_err(|e| format!("Failed to open services: {}", e))?;
+
+    let pid = child.id();
+
+    tracker
+        .processes
+        .lock()
+        .unwrap()
+        .insert(pid, child);
+
+    enforce_timeout(pid, std::time::Duration::from_secs(30), (*tracker).clone());
+
     Ok(())
 }
 
 #[tauri::command]
-fn open_eventvwr(state: State<AppState>) -> Result<(), String> {
-    let t = state.target_machine.lock().map_err(|e| e.to_string())?;
+fn open_eventvwr(
+    target_state: tauri::State<AppState>,
+    tracker: tauri::State<Arc<ProcessTracker>>
+) -> Result<(), String> {
+    // Ensure a target machine is set.
+    let t = target_state.target_machine.lock().map_err(|e| e.to_string())?;
     if t.trim().is_empty() {
         return Err("No target machine set".into());
     }
     let computer_arg = format!("/computer:{}", t);
     println!("Opening Event Viewer at: {}", t);
 
-    std::process::Command::new("mmc.exe")
+    // Spawn the process and store its handle in a variable.
+    let child = std::process::Command::new("mmc.exe")
         .arg("eventvwr.msc")
         .arg(computer_arg)
         .spawn()
         .map_err(|e| format!("Failed to open Event Viewer: {}", e))?;
+
+    // Retrieve the PID from the spawned process.
+    let pid = child.id();
+
+    // Tag the process: store it in our process tracker.
+    tracker
+        .processes
+        .lock()
+        .unwrap()
+        .insert(pid, child);
+
+    // Start timeout enforcement (30 seconds in this example).
+    enforce_timeout(pid, std::time::Duration::from_secs(30), (*tracker).clone());
+
     Ok(())
 }
 
+
+
 #[tauri::command]
-fn open_compmgmt(state: State<AppState>) -> Result<(), String> {
-    let t = state.target_machine.lock().map_err(|e| e.to_string())?;
+fn open_compmgmt(
+    target_state: tauri::State<AppState>,
+    tracker: tauri::State<Arc<ProcessTracker>>
+    ) -> Result<(), String> {
+    let t = target_state.target_machine.lock().map_err(|e| e.to_string())?;
     if t.trim().is_empty() {
         return Err("No target machine set".into());
     }
     let computer_arg = format!("/computer:{}", t);
     println!("Opening Computer Management at: {}", t);
 
-    std::process::Command::new("mmc.exe")
+    let child = std::process::Command::new("mmc.exe")
         .arg("compmgmt.msc")
         .arg(computer_arg)
         .spawn()
         .map_err(|e| format!("Failed to open Computer Management: {}", e))?;
+
+    let pid = child.id();
+
+    tracker
+        .processes
+        .lock()
+        .unwrap()
+        .insert(pid, child);
+
+    enforce_timeout(pid, std::time::Duration::from_secs(30), (*tracker).clone());
+
     Ok(())
 }
 
 #[tauri::command]
-fn open_devicemgr(state: State<AppState>) -> Result<(), String> {
-    let t = state.target_machine.lock().map_err(|e| e.to_string())?;
+fn open_devicemgr(
+    target_state: tauri::State<AppState>,
+    tracker: tauri::State<Arc<ProcessTracker>>
+    ) -> Result<(), String> {
+    let t = target_state.target_machine.lock().map_err(|e| e.to_string())?;
     if t.trim().is_empty() {
         return Err("No target machine set".into());
     }
     let computer_arg = format!("/computer:{}", t);
     println!("Opening Disk Management at: {}", t);
 
-    std::process::Command::new("mmc.exe")
+    let child = std::process::Command::new("mmc.exe")
         .arg("devmgmt.msc")
         .arg(computer_arg)
         .spawn()
         .map_err(|e| format!("Failed to open Device Manager: {}", e))?;
+
+    let pid = child.id();
+
+    tracker
+        .processes
+        .lock()
+        .unwrap()
+        .insert(pid, child);
+
+    enforce_timeout(pid, std::time::Duration::from_secs(30), (*tracker).clone());
+
     Ok(())
 }
 
@@ -320,28 +453,78 @@ fn open_gpu() -> Result<(), String> {
 }
 
 #[tauri::command]
-fn open_perfmon(state: State<AppState>) -> Result<(), String> {
-    let t = state.target_machine.lock().map_err(|e| e.to_string())?;
+fn open_perfmon(
+    target_state: tauri::State<AppState>,
+    tracker: tauri::State<Arc<ProcessTracker>>
+    ) -> Result<(), String> {
+    let t = target_state.target_machine.lock().map_err(|e| e.to_string())?;
     if t.trim().is_empty() {
         return Err("No target machine set".into());
     }
     let computer_arg = format!("/computer:{}", t);
     println!("Opening Performance Monitor at: {}", t);
 
-    std::process::Command::new("mmc.exe")
+    let child = std::process::Command::new("mmc.exe")
         .arg("perfmon")
         .arg(computer_arg)
         .spawn()
         .map_err(|e| format!("Failed to open Performance Monitor: {}", e))?;
+
+    let pid = child.id();
+
+    tracker
+        .processes
+        .lock()
+        .unwrap()
+        .insert(pid, child);
+
+    enforce_timeout(pid, std::time::Duration::from_secs(30), (*tracker).clone());
+
+    Ok(())
+}
+
+#[tauri::command]
+fn open_printmgr(
+    target_state: tauri::State<AppState>,
+    tracker: tauri::State<Arc<ProcessTracker>>
+    ) -> Result<(), String> {
+    let t = target_state.target_machine.lock().map_err(|e| e.to_string())?;
+    if t.trim().is_empty() {
+        return Err("No target machine set".into());
+    }
+    let computer_arg = format!("/computer:{}", t);
+    println!("Opening Print Management at: {}", t);
+
+    let child = std::process::Command::new("mmc.exe")
+        .arg("printmanagement.msc")
+        .arg(computer_arg)
+        .spawn()
+        .map_err(|e| format!("Failed to open Print Management: {}", e))?;
+
+    let pid = child.id();
+
+    tracker
+        .processes
+        .lock()
+        .unwrap()
+        .insert(pid, child);
+
+    enforce_timeout(pid, std::time::Duration::from_secs(30), (*tracker).clone());
+
     Ok(())
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    tauri::Builder::default()
+    let process_tracker = Arc::new(ProcessTracker {
+        processes: Mutex::new(HashMap::new()),
+    });
+
+    let app = tauri::Builder::default()
         .manage(AppState {
             target_machine: Mutex::new(String::new()),
         })
+        .manage(process_tracker.clone())
         .invoke_handler(tauri::generate_handler![
             set_target,
             ping,
@@ -361,9 +544,22 @@ pub fn run() {
             open_dhcp,
             open_dns,
             open_gpu,
-            open_perfmon
+            open_perfmon,
+            open_printmgr
         ])
-        .run(tauri::generate_context!())
+        .build(tauri::generate_context!())
         .expect("error while running tauri application");
+
+    app.run(move |_app_handle, event| {
+        if let tauri::RunEvent::ExitRequested { api: _, .. } = event {
+            let mut processes = process_tracker.processes.lock().unwrap();
+            for (pid, mut child) in processes.drain() {
+                println!("Gracefully terminating process {} on shutdown.", pid);
+                let _ = child.kill();
+            }
+        }
+    });
 }
+
+
 

@@ -1,4 +1,4 @@
-<h1> 💥Xip</h1>
+<h1>💥Xip</h1>
 <div align="center">
   <img src="public/favicon.ico" alt="Logo" width="400" height="400" />
 </div>
@@ -75,6 +75,7 @@ The following is the roadmap for this project. Nothing is set in stone, and all 
 - [ ] Allow easy implementation of private choco repos for custom applications
 - [ ] Implement custom UI design options
 - [ ] Fix bug related to authentication
+- [x] Fix bug related to hanging processes (Next Version)
 - [ ] Add support for user profiles
 - [ ] Implement search functionality
 - [ ] Redesign user interface
@@ -86,7 +87,7 @@ The following is the roadmap for this project. Nothing is set in stone, and all 
 <h1>🐛Known Bugs</h1>
 
 - Grid Panels can be lost off screen if sized too large. Only solution right now is to refresh the app
-- There is a small chance (it happened once in hundreds of test during production) a process can get hung on the target machine when running Event Viewer. This locks the exe file, not allowing you to read, run, or modify the exe. End the process or restart both systems to fix.
+- ~~There is a small chance (it happened once in hundreds of test during development) a process can get hung on the target machine when running Event Viewer. This locks the exe file, not allowing you to read, run, or modify the exe. End the process or restart both systems to fix.~~
 - Responsivness on ultrawides is incorrect. UI elements will be sized incorrectly.
 - Device Mananger opens the local machines devices instead of targeted machine.
 
@@ -96,4 +97,4 @@ Xip is still in **heavy** development and is being worked on quite frequently. T
 
 <h1>Installation</h1>
 
-You can find the initial pre-release v0.1.0-alpha under the releases section on in the repo. Alternatively, you can find the .exe in `src-tauri/target/release`. A unistaller is also included.
+You can find the initial pre-release v0.1.0-alpha under the releases section in the repo. Alternatively, you can find the .exe in `src-tauri/target/release`. A unistaller is also included.
