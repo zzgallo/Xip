@@ -75,7 +75,7 @@ The following is the roadmap for this project. Nothing is set in stone, and all 
 - [ ] Allow easy implementation of private choco repos for custom applications
 - [ ] Implement custom UI design options
 - [ ] Fix bug related to authentication
-- [x] Fix bug related to hanging processes (** Added in next version**)
+- [x] Fix bug related to hanging processes (**Resolved in next version**)
 - [ ] Add support for user profiles
 - [ ] Implement search functionality
 - [ ] Redesign user interface

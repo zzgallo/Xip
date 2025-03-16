@@ -1,0 +1,64 @@
+.settings-section {
+  position: relative;
+  width: 100%;
+  max-width: 100vw; /* Prevents background overflow */
+  height: calc(100vh - 130px);
+  overflow: hidden;
+  background-color: #403D39;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+  border: 3px #252422 groove;
+  border-right: 3px #EB5E28 solid;
+  border-bottom-right-radius: 0px;
+  box-sizing: border-box;
+  box-shadow: #252422;
+  border-radius: 8px;
+  padding-right: 14px;
+}
+
+/* Background Image Overlay (Fixed Width) */
+.settings-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url("/src/assets/background1.jpg") no-repeat center center;
+  background-size: cover;
+  opacity: 0.2;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Title Styling - Matches Other Sections */
+.settings-title {
+  color: #FFF;
+  font-family: "Chonburi", serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: 64px;
+  text-align: left;
+  margin-bottom: 20px;
+  border-left: 6px #EB5E28 groove;
+  margin-left: 5px;
+}
+
+/* Save Button */
+.settings-save-button {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 10px 16px;
+  border-radius: 8px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s ease, border 0.3s ease;
+}
+
+.settings-save-button:hover {
+  background-color: #252422;
+}

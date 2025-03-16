@@ -16,8 +16,7 @@ import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 import "./App.css";
 import SidebarButton from "./SidebarButton";
-
-
+import SettingsSection from "./SettingsSection";
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
 function App() {
@@ -408,12 +407,10 @@ function App() {
           <h1 className="install-title">Install</h1>
         </div>
       );
-    } else if (activeSection === "settings")
-      return (
-        <div className="xip-section" key="settings">
-          <h1 className="settings-title">Settings</h1>
-        </div>
-    )
+    } else if (activeSection === "settings" ) {
+      return <SettingsSection key="settings" />;
+    }
+
 
     // Get the grid items for the current section
     const gridItems = {

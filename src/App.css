@@ -220,16 +220,6 @@ html, body, #root {
     margin-bottom: 20px;
   }
 
-  .settings-title {
-    color: #252422;
-    font-family: "Chonburi", serif;
-    font-weight: 400;
-    font-style: italic;
-    font-size: 64px;
-    text-align: left;
-    margin-bottom: 20px;
-  }
-
   .xip-section {
     border-left: 3px #EB5E28 solid;
     height: 8%;
