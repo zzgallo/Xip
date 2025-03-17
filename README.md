@@ -51,6 +51,8 @@ On remote machines, **Xip** allows you to run several useful commands and retrie
 
 ---
 
+<img src="public/xipSS.png" alt="Logo" width="400" height="400" />
+
 ### 🚧 **In Development**
 
 While **Xip** already offers many powerful features, it’s still in heavy development! We have many exciting features planned, which you can find in our **[Roadmap](#Roadmap)**. My main goal for this project
