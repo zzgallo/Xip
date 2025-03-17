@@ -25,10 +25,11 @@
     "active": true,
     "targets": "all",
     "icon": [
-      "icons/seal16x16.ico",
-      "icons/seal32x32.ico",
-      "icons/seal64x64.ico",
-      "icons/seal256x256.ico"
+      "icons/logo16x16.ico",
+      "icons/logo32x32.ico",
+      "icons/logo64x64.ico",
+      "icons/logo128x128.ico",
+      "icons/logo256x256.ico"
     ]
   }
   

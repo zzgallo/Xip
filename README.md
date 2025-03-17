@@ -73,9 +73,10 @@ The following is the roadmap for this project. Nothing is set in stone, and all 
 
 - [ ] Implement winget and chocolatey for local and remote installations
 - [ ] Allow easy implementation of private choco repos for custom applications
+- [ ] Add auto launch into administrator mode
 - [ ] Implement custom UI design options
 - [ ] Fix bug related to authentication
-- [x] Fix bug related to hanging processes (**Resolved in next version**)
+- [x] Fix bug related to hanging processes (** Added in next version**)
 - [ ] Add support for user profiles
 - [ ] Implement search functionality
 - [ ] Redesign user interface
@@ -91,10 +92,20 @@ The following is the roadmap for this project. Nothing is set in stone, and all 
 - Responsivness on ultrawides is incorrect. UI elements will be sized incorrectly.
 - Device Mananger opens the local machines devices instead of targeted machine.
 
-<h1>ℹ️Additional Information</h1>
-
-Xip is still in **heavy** development and is being worked on quite frequently. This has been a learning and hobby project for myself, and I do appreciate all feedback.
 
 <h1>Installation</h1>
 
 You can find the initial pre-release v0.1.0-alpha under the releases section in the repo. Alternatively, you can find the .exe in `src-tauri/target/release`. A unistaller is also included.
+
+
+<h1>ℹ️Additional Information</h1>
+
+> [NOTE]
+>Xip is still in **heavy** development and is being worked on quite frequently. This has been a learning and hobby project for myself, and I do appreciate all feedback. Expect some errors and inefficiencies. 
+
+> [!IMPORTANT]
+>Some functions require remote powershell and the program needs to be ran as administrator, it currently does not auto auth via windows credentials.
+
+
+
+
