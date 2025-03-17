@@ -71,12 +71,14 @@ The following is the roadmap for this project. Nothing is set in stone, and all 
 
 ### (Coming Soon)
 
+- [ ] Implement querying for Server & Endstation information seen in the sections
+- [ ] Add/Remove grid panels. Customize panels
 - [ ] Implement winget and chocolatey for local and remote installations
 - [ ] Allow easy implementation of private choco repos for custom applications
 - [ ] Add auto launch into administrator mode
 - [ ] Implement custom UI design options
 - [ ] Fix bug related to authentication
-- [x] Fix bug related to hanging processes (** Added in next version**)
+- [x] Fix bug related to hanging processes (** Added in new version**)
 - [ ] Add support for user profiles
 - [ ] Implement search functionality
 - [ ] Redesign user interface
@@ -88,7 +90,7 @@ The following is the roadmap for this project. Nothing is set in stone, and all 
 <h1>🐛Known Bugs</h1>
 
 - Grid Panels can be lost off screen if sized too large. Only solution right now is to refresh the app
-- ~~There is a small chance (it happened once in hundreds of test during development) a process can get hung on the target machine when running Event Viewer. This locks the exe file, not allowing you to read, run, or modify the exe. End the process or restart both systems to fix.~~ (**Resolved in next version**)
+- ~~There is a small chance (it happened once in hundreds of test during development) a process can get hung on the target machine when running Event Viewer. This locks the exe file, not allowing you to read, run, or modify the exe. End the process or restart both systems to fix.~~ (**Resolved**)
 - Responsivness on ultrawides is incorrect. UI elements will be sized incorrectly.
 - Device Mananger opens the local machines devices instead of targeted machine.
 
@@ -103,8 +105,9 @@ You can find the initial pre-release v0.1.0-alpha under the releases section in 
 > [NOTE]
 >Xip is still in **heavy** development and is being worked on quite frequently. This has been a learning and hobby project for myself, and I do appreciate all feedback. Expect some errors and inefficiencies. 
 
+
 > [!IMPORTANT]
->Some functions require remote powershell and the program needs to be ran as administrator, it currently does not auto auth via windows credentials.
+>Some functions require remote powershell, however only a few. For larger environments this can easily be enabled in Group policy. The program needs to be ran as administrator, it currently does not auto auth via windows credentials.
 
 
 
