@@ -51,7 +51,7 @@ On remote machines, **Xip** allows you to run several useful commands and retrie
 
 ---
 
-<img src="public/xipSS.png" alt="Logo" width="400" height="400" />
+<img src="public/xipSS.png" alt="Logo" width="100%" height="100%" />
 
 ### 🚧 **In Development**
 
