@@ -4,7 +4,7 @@
 </div>
 
 <div align="center">
-<h2>Xip is a remote IT administration tool designed to be a tailored made one stop shop for your environment. Built to be fast and lightweight using Tauri with a Rust backend.</h2>
+<h2>Xip is a remote IT administration tool  GUI designed to be a tailored made one stop shop for your environment. Built to be fast and lightweight using Tauri with a Rust backend.</h2>
 </div>
 
 ---
@@ -66,14 +66,14 @@ is to allow users to completly customize a workflow that suits them best.
 
 The following is the roadmap for this project. Nothing is set in stone, and all suggestions are appreciated.
 
-### v0.1.0 - Launch Edition
+### v0.1.0-alpha - Launch Edition (Current)
 
 - [x] Basic Computer Management
 - [x] DHCP, DNS, Active Directory, & Group Policy shortcuts
 - [x] Basic Network Tools
-- [x] Error handling and logging
+- [x] Basic Error handling
 
-### (Coming Soon)
+### v0.2.0 (Coming Soon)
 
 - [ ] Implement querying for Server & Endstation information seen in the sections
 - [ ] Add/Remove grid panels. Customize panels
@@ -82,11 +82,11 @@ The following is the roadmap for this project. Nothing is set in stone, and all 
 - [ ] Add auto launch into administrator mode
 - [ ] Implement custom UI design options
 - [ ] Fix bug related to authentication
-- [x] Fix bug related to hanging processes (** Added in new version**)
+- [x] Fix bug related to hanging processes 
 - [ ] Add support for user profiles
 - [ ] Implement search functionality
 - [ ] Redesign user interface
-- [ ] Explore AI integration for advanced features
+- [ ] Explore AI integration
 - [ ] Add RDP function, with option to replace with custom RDP. (Ex. RustDesk, DameWare, etc.)
 
 ---
