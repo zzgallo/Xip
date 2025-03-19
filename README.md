@@ -53,6 +53,8 @@ On remote machines, **Xip** allows you to run several useful commands and retrie
 
 <img src="public/xipSS.png" alt="Logo" width="100%" height="100%" />
 
+---
+
 ### 🚧 **In Development**
 
 While **Xip** already offers many powerful features, it’s still in heavy development! We have many exciting features planned, which you can find in our **[Roadmap](#Roadmap)**. My main goal for this project
@@ -67,7 +69,7 @@ The following is the roadmap for this project. Nothing is set in stone, and all 
 ### v0.1.0 - Launch Edition
 
 - [x] Basic Computer Management
-- [x] DHCP, DNS, Active Directory, & Group Policy integration
+- [x] DHCP, DNS, Active Directory, & Group Policy shortcuts
 - [x] Basic Network Tools
 - [x] Error handling and logging
 
